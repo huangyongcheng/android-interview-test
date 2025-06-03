@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">cisbox Authenticator</string>
+    <string name="schema">otpauth</string>
+    <string name="app_qr_code_invalid">This QR code cannot be scanned.</string>
+    <string name="app_secret_key_invalid">Your secret key invalid.</string>
+    <string name="save_secret_key_success">Account %s added successfully.</string>
+    <string name="update_secret_key_success">Account %s updated successfully.</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_invalid_title">Error</string>
+    <string name="dialog_scan_qr">Scan QR</string>
+    <string name="dialog_enter_key">Enter setup key</string>
+    <string name="dialog_add_token_title">Add Token</string>
+    <string name="dialog_add_token_description">Do you want to add the token named\n%s</string>
+    <string name="app_no_data">No data available, please add a new item.</string>
+    <string name="app_copied">copied</string>
+    <string name="app_account_name">User name</string>
+    <string name="app_your_key">Your key</string>
+    <string name="app_add">Add</string>
+    <string name="app_add_manual_title">Enter detail account</string>
+
+
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>
