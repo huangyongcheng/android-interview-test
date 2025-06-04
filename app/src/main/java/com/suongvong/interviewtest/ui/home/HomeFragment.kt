@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ import com.suongvong.interviewtest.ui.base.BaseFragment
 import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
 import com.suongvong.interviewtest.utils.ArticleDataSource
 import com.suongvong.interviewtest.utils.HorizontalMarginItemDecoration
+import com.suongvong.interviewtest.utils.SearchUtils
 import com.suongvong.interviewtest.utils.ZoomOutPageTransformer
 import kotlin.math.abs
 
@@ -82,6 +84,16 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.news_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+
+        SearchUtils.setDebouncedListener(searchView) { query ->
+            if (query != null) {
+                viewModel.getNewsEverything(context,query)
+            }
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -89,7 +101,6 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
         return when (item.itemId) {
             R.id.action_switch_language -> {
                 DialogFactory.openLanguageDialog(context){
-                    newsAdapter?.submitList(null)
                     viewModel.getNewsEverything(context)
                 }
                 true
@@ -178,6 +189,7 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
 
     override fun onGetNewsEverythingSuccessful(articles: List<Article>) {
         ArticleDataSource.createDataSource(articles).observe(this){
+            newsAdapter?.submitList(null)
             newsAdapter?.submitList(it)
         }
 
