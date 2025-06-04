@@ -1,22 +1,19 @@
 package com.suongvong.interviewtest.ui.home
 
 import android.content.Intent
-import android.net.Uri
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.suongvong.interviewtest.AuthenticatorApplication
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.adapter.TokenAdapter
@@ -27,7 +24,6 @@ import com.suongvong.interviewtest.model.QRData
 import com.suongvong.interviewtest.ui.base.BaseActivity
 import com.suongvong.interviewtest.ui.manual.ManualActivity
 import com.suongvong.interviewtest.ui.scan.ScanQRActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.suongvong.interviewtest.ui.detail.DetailFragment
 import com.suongvong.interviewtest.ui.main.MainNavigator
@@ -41,6 +37,7 @@ class MainActivity2 : BaseActivity<MainViewModel>(), TokenAdapter.ItemListener, 
     private var drawerLayout: DrawerLayout? = null
     private var navView: NavigationView? = null
     private  lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var navController: NavController
 
 
     override fun getViewModelClass() = MainViewModel::class.java
@@ -61,12 +58,41 @@ class MainActivity2 : BaseActivity<MainViewModel>(), TokenAdapter.ItemListener, 
         navView = findViewById(R.id.nav_view)
         navView?.setNavigationItemSelectedListener(this)
 
+
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.nav_host_fragment, HomeFragment())
+//            .commit()
         setSupportActionBar(toolBar)
         setupActionBarDrawerToggle()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment_content_main, HomeFragment())
-            .commit()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.homeFragment),
+            drawerLayout
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
+
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            if (destination.id == R.id.homeFragment) {
+//                supportActionBar?.setDisplayHomeAsUpEnabled(false)
+//                toggle.isDrawerIndicatorEnabled = true
+//                drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+//                toggle.syncState()
+//            } else {
+//                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//                toggle.isDrawerIndicatorEnabled = false
+//                drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+//                toggle.syncState()
+//            }
+//        }
+
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     private fun setupActionBarDrawerToggle(){
@@ -87,18 +113,16 @@ class MainActivity2 : BaseActivity<MainViewModel>(), TokenAdapter.ItemListener, 
 
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        return when {
+            toggle.onOptionsItemSelected(item) -> true
+            item.itemId == android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-
-    fun getRemainingTime(): Int {
-        val currentTimeSeconds = ((System.currentTimeMillis()) / 1000)
-        val time = currentTimeSeconds % 30
-        return (30 - time).toInt()
-
     }
 
 
@@ -160,13 +184,13 @@ class MainActivity2 : BaseActivity<MainViewModel>(), TokenAdapter.ItemListener, 
         when (item.itemId) {
             R.id.nav_home -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment_content_main, HomeFragment())
+                    .replace(R.id.nav_host_fragment, HomeFragment())
                     .commit()
             }
 
             R.id.nav_profile -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment_content_main, DetailFragment())
+                    .replace(R.id.nav_host_fragment, DetailFragment())
                     .commit()
             }
 

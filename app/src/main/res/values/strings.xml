@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">cisbox Authenticator</string>
+    <string name="app_name">News</string>
     <string name="schema">otpauth</string>
     <string name="app_qr_code_invalid">This QR code cannot be scanned.</string>
     <string name="app_secret_key_invalid">Your secret key invalid.</string>
