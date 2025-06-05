@@ -1,5 +1,6 @@
-package com.suongvong.interviewtest.ui.home
+package com.suongvong.interviewtest.ui
 
+import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -12,19 +13,19 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.suongvong.interviewtest.AuthenticatorApplication
+import com.suongvong.interviewtest.NewsApplication
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.ui.base.BaseActivity
 import com.google.android.material.navigation.NavigationView
+import com.suongvong.interviewtest.constants.SEARCH_PARAMS
 import com.suongvong.interviewtest.dialog.DialogFactory
 import com.suongvong.interviewtest.ui.category.CategoryFragment
-import com.suongvong.interviewtest.ui.detail.DetailFragment
 import com.suongvong.interviewtest.ui.main.MainNavigator
 import com.suongvong.interviewtest.ui.main.MainViewModel
 import com.suongvong.interviewtest.ui.main.MainViewModelFactory
 import com.suongvong.interviewtest.ui.search.SearchFragment
 
-class MainActivity2 : BaseActivity<MainViewModel>(), MainNavigator,
+class MainActivity : BaseActivity<MainViewModel>(), MainNavigator,
      NavigationView.OnNavigationItemSelectedListener {
 
     private var toolBar: Toolbar? = null
@@ -37,13 +38,13 @@ class MainActivity2 : BaseActivity<MainViewModel>(), MainNavigator,
     override fun getViewModelClass() = MainViewModel::class.java
 
     override fun getViewModelFactory(): ViewModelProvider.Factory {
-        return MainViewModelFactory((application as AuthenticatorApplication).repository)
+        return MainViewModelFactory((application as NewsApplication).repository)
     }
 
     override fun setUpNavigator() = viewModel.setNavigator(this)
 
 
-    override fun getLayoutId(): Int = R.layout.activity_main2
+    override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun setupView() {
         toolBar = findViewById(R.id.toolbar)
@@ -137,8 +138,13 @@ class MainActivity2 : BaseActivity<MainViewModel>(), MainNavigator,
 //                    .commit()
                 DialogFactory.openSearchNewsDialog(this){
 
-                    val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment(it)
-                    navController.navigate(action)
+//                    val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment(it)
+//                    navController.navigate(action)
+
+                    val bundle = Bundle().apply {
+                        putParcelable(SEARCH_PARAMS,it)
+                    }
+                    navController.navigate(R.id.searchFragment, bundle)
                 }
             }
 

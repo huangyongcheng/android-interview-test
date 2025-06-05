@@ -1,183 +1,214 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:text="@string/search_news"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etKeyword"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_border_search"
+                android:cursorVisible="true"
+                android:hint="@string/hint_keyword"
+                android:padding="4dp"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+            <TextView
+                android:id="@+id/tvErrorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_keyword_error"
+                android:textColor="@android:color/holo_red_dark"
+                android:textStyle="italic"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/label_search_type" />
+
+            <RadioGroup
+                android:id="@+id/rgSearchType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbEverything"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorPrimary"
+                    android:checked="true"
+                    android:text="@string/search_type_everything" />
+
+                <RadioButton
+                    android:id="@+id/rbTopHeadlines"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorPrimary"
+                    android:text="@string/search_type_top_headlines" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/llSearchDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/btnFromDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button_search"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="@string/label_from_date"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/btnToDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button_search"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="@string/label_to_date"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSearchIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_search_in" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupSearchIns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:chipSpacing="8dp"
+                    app:selectionRequired="false"
+                    app:singleSelection="false" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_category" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:chipSpacing="8dp"
+                    app:selectionRequired="false"
+                    app:singleSelection="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSortBy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_sort_by" />
+
+                <Spinner
+                    android:id="@+id/spinnerSort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/etKeyword"
-            android:padding="4dp"
-            android:background="@drawable/bg_border_search"
-            android:cursorVisible="true"
-            android:textCursorDrawable="@drawable/cursor_drawable"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/hint_keyword" />
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingEnd="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/btnSearch"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/label_search_type" />
+            android:background="@drawable/bg_button_search"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/btn_search"
+            android:textColor="@color/white" />
 
-        <RadioGroup
-            android:id="@+id/rgSearchType"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/btnClose"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp">
-
-            <RadioButton
-                android:checked="true"
-                android:id="@+id/rbEverything"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/search_type_everything" />
-
-            <RadioButton
-                android:id="@+id/rbTopHeadlines"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/search_type_top_headlines" />
-        </RadioGroup>
-
-
-        <LinearLayout
-            android:id="@+id/llSearchDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <TextView
-                android:id="@+id/btnFromDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_button_search"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="@string/label_from_date"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/btnToDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_button_search"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="@string/label_to_date"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="12dp"
-            android:id="@+id/llSearchIn"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_search_in" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupSearchIns"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:chipSpacing="8dp"
-                app:selectionRequired="false"
-                app:singleSelection="false" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_marginTop="12dp"
-            android:id="@+id/llCategory"
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_category" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupCategories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:chipSpacing="8dp"
-                app:selectionRequired="false"
-                app:singleSelection="false" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="12dp"
-            android:id="@+id/llSortBy"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_sort_by" />
-
-            <Spinner
-                android:id="@+id/spinnerSort"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp" />
-
-        </LinearLayout>
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/btnSearch"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_button_search"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="@string/btn_search"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/btnClose"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_button_cancel"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="@string/btn_close"
-                android:textColor="@color/white" />
-        </LinearLayout>
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_button_cancel"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/btn_close"
+            android:textColor="@color/white" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

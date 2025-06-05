@@ -84,14 +84,14 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.news_menu, menu)
 
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+//        val searchItem = menu.findItem(R.id.action_search)
+//        val searchView = searchItem.actionView as SearchView
 
-        SearchUtils.setDebouncedListener(searchView) { query ->
-            if (query != null) {
-                viewModel.getNewsEverything(context,query)
-            }
-        }
+//        SearchUtils.setDebouncedListener(searchView) { query ->
+//            if (query != null) {
+//                viewModel.getNewsEverything(context,query)
+//            }
+//        }
 
         super.onCreateOptionsMenu(menu, inflater)
     }

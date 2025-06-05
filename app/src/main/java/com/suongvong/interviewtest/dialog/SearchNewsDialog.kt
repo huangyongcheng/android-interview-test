@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -12,12 +13,17 @@ import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
+import androidx.core.content.ContextCompat
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.suongvong.interviewtest.R
-import com.suongvong.interviewtest.enums.TypeSearch
+import com.suongvong.interviewtest.enums.SearchType
+import com.suongvong.interviewtest.extentions.setOnTextChangedListener
 import com.suongvong.interviewtest.extentions.showIf
 import com.suongvong.interviewtest.extentions.showKeyboard
+import com.suongvong.interviewtest.interfaces.OnTextChangedListener
 import com.suongvong.interviewtest.model.SearchParams
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -26,7 +32,7 @@ class SearchNewsDialog(
     context: Context,
 
     private val onSearch: (SearchParams) -> Unit
-) : Dialog(context), View.OnClickListener {
+) : Dialog(context), View.OnClickListener, OnTextChangedListener {
 
     private var fromDate: String? = null
     private var toDate: String? = null
@@ -49,6 +55,7 @@ class SearchNewsDialog(
     private lateinit var llCategory: LinearLayout
     private lateinit var llSearchDate: LinearLayout
     private lateinit var llSortBy: LinearLayout
+    private lateinit var tvErrorText: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,16 +75,18 @@ class SearchNewsDialog(
         llCategory = findViewById(R.id.llCategory)
         llSearchDate = findViewById(R.id.llSearchDate)
         llSortBy = findViewById(R.id.llSortBy)
+        tvErrorText = findViewById(R.id.tvErrorText)
 
         btnFromDate.setOnClickListener(this)
         btnToDate.setOnClickListener(this)
         btnSearch.setOnClickListener(this)
         btnClose.setOnClickListener(this)
+        etKeyword.setOnTextChangedListener(this)
         etKeyword.showKeyboard()
 
         availableCategories = context.resources.getStringArray(R.array.news_categories).toList()
         sortOptions = context.resources.getStringArray(R.array.sort_options).toList()
-        searchIns =context.resources.getStringArray(R.array.news_search_in).toList()
+        searchIns = context.resources.getStringArray(R.array.news_search_in).toList()
 
         rgSearchType.setOnCheckedChangeListener { _, checkedId ->
             val isEverything = checkedId == R.id.rbEverything
@@ -86,30 +95,28 @@ class SearchNewsDialog(
             llSearchIn.showIf(isEverything)
             llSortBy.showIf(isEverything)
 
+            if (isEverything && TextUtils.isEmpty(etKeyword.text.toString())) {
+                tvErrorText.visibility = View.VISIBLE
+            } else {
+                tvErrorText.visibility = View.GONE
+            }
+
         }
 
         chipGroupCategory.removeAllViews()
 
-        availableCategories.forEach { category ->
+        availableCategories.forEach { item ->
             val chip = Chip(context).apply {
-                text = category
+                text = item.capitalize(Locale.current)
                 isCheckable = true
             }
             chipGroupCategory.addView(chip)
         }
 
 
-        availableCategories.forEach { category ->
+        searchIns.forEach { item ->
             val chip = Chip(context).apply {
-                text = category
-                isCheckable = true
-            }
-            chipGroupCategory.addView(chip)
-        }
-
-        searchIns.forEach { category ->
-            val chip = Chip(context).apply {
-                text = category
+                text = item.capitalize(Locale.current)
                 isCheckable = true
             }
             chipGroupSearchIn.addView(chip)
@@ -127,10 +134,13 @@ class SearchNewsDialog(
 
     private fun showDatePicker(onDateSelected: (LocalDate) -> Unit) {
         val today = LocalDate.now()
-        val dialog = DatePickerDialog(context, { _, year, month, dayOfMonth ->
+        val dialog = DatePickerDialog(context, R.style.CustomDatePickerDialogTheme, { _, year, month, dayOfMonth ->
             onDateSelected(LocalDate.of(year, month + 1, dayOfMonth))
         }, today.year, today.monthValue - 1, today.dayOfMonth)
         dialog.show()
+
+        dialog.getButton(DatePickerDialog.BUTTON_POSITIVE)?.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+        dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)?.setTextColor(ContextCompat.getColor(context, R.color.warm_grey))
     }
 
     override fun onClick(v: View?) {
@@ -150,31 +160,43 @@ class SearchNewsDialog(
             }
 
             R.id.btnSearch -> {
-                val keyword = etKeyword.text.toString()
-                val selectedCategories = chipGroupCategory.checkedChipIds.mapNotNull { id ->
-                    chipGroupCategory.findViewById<Chip>(id)?.text?.toString()
+                val keyword: String? = if (TextUtils.isEmpty(etKeyword.text)) {
+                    null
+                } else {
+                    etKeyword.text.toString()
                 }
+                val selectedCategory = chipGroupCategory.findViewById<Chip>(chipGroupCategory.checkedChipId)?.text?.toString()
                 val selectedSearchIns = chipGroupSearchIn.checkedChipIds.mapNotNull { id ->
                     chipGroupSearchIn.findViewById<Chip>(id)?.text?.toString()
                 }
                 val sortBy = spinnerSort.selectedItem?.toString() ?: sortOptions[0]
 
-                val params = SearchParams(
-                    typeSearch = if (rgSearchType.checkedRadioButtonId == R.id.rbEverything) TypeSearch.EVERYTHING else TypeSearch.TOP_HEADLINE,
-                    keyword = keyword,
-                    fromDate = fromDate,
-                    toDate = toDate,
-                    categories = selectedCategories,
-                    searchIns = selectedSearchIns,
-                    sortBy = sortBy
-                )
-                onSearch(params)
-                dismiss()
+                if (keyword?.isNotBlank() == true || rgSearchType.checkedRadioButtonId == R.id.rbTopHeadlines) {
+                    val params = SearchParams(
+                        searchType = if (rgSearchType.checkedRadioButtonId == R.id.rbEverything) SearchType.EVERYTHING else SearchType.TOP_HEADLINE,
+                        keyword = keyword,
+                        fromDate = fromDate,
+                        toDate = toDate,
+                        category = selectedCategory,
+                        searchIns = selectedSearchIns,
+                        sortBy = sortBy
+                    )
+                    onSearch(params)
+                    dismiss()
+                } else {
+                    tvErrorText.visibility = View.VISIBLE
+                    etKeyword.background = ContextCompat.getDrawable(context, R.drawable.bg_border_error)
+                }
             }
 
             R.id.btnClose -> {
                 dismiss()
             }
         }
+    }
+
+    override fun onTextChanged(text: String) {
+        tvErrorText.showIf(TextUtils.isEmpty(text))
+
     }
 }

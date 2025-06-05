@@ -11,9 +11,9 @@ import retrofit2.Response
 
 class HomeViewModel : BaseViewModel<HomeNavigator>() {
 
-     fun getNewsEverything(context: Context?, searchKeyWord:String ="today") {
+     fun getNewsEverything(context: Context?) {
          val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getEverything(searchKey=searchKeyWord,language = context?.getLanguage())
+        val call = RetrofitClient.instance.getEverything()
 
         call.enqueue(object : Callback<NewsResponse> {
             override fun onResponse(

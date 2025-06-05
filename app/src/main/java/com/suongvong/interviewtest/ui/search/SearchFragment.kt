@@ -1,24 +1,28 @@
 package com.suongvong.interviewtest.ui.search
 
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.adapter.CarouselAdapter
 import com.suongvong.interviewtest.adapter.NewsAdapter
-import com.suongvong.interviewtest.binder.NewsBinderView
+import com.suongvong.interviewtest.binder.SearchBinderView
+import com.suongvong.interviewtest.constants.SEARCH_PARAMS
 import com.suongvong.interviewtest.dialog.DialogFactory
 import com.suongvong.interviewtest.model.SearchParams
 import com.suongvong.interviewtest.network.response.Article
@@ -30,11 +34,10 @@ import com.suongvong.interviewtest.utils.HorizontalMarginItemDecoration
 import com.suongvong.interviewtest.utils.SearchUtils
 import kotlin.math.abs
 
-class SearchFragment: BaseFragment<SearchViewModel>(), SearchNavigator, NewsBinderView.OnItemClickListener {
+class SearchFragment: BaseFragment<SearchViewModel>(), SearchNavigator, SearchBinderView.OnItemClickListener {
 
     private var rvArticle: RecyclerView? = null
     private var newsAdapter: NewsAdapter? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
     private var searchParams :SearchParams?=null
 
     override fun getLayoutId(): Int  = R.layout.fragment_search
@@ -62,23 +65,23 @@ class SearchFragment: BaseFragment<SearchViewModel>(), SearchNavigator, NewsBind
         viewModel.searchNews(context, searchParams)
     }
 
+  //  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun getArgumentIntent() {
         super.getArgumentIntent()
         searchParams = arguments?.let {
-            SearchFragmentArgs.fromBundle(it).searchParams
+           it.getParcelable(SEARCH_PARAMS)
         }
-
     }
 
 
 
     private fun setupRecyclerView(){
-        linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+   //     linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         newsAdapter = NewsAdapter()
 
-        rvArticle?.layoutManager = linearLayoutManager
+        rvArticle?.layoutManager =  StaggeredGridLayoutManager( 2,  StaggeredGridLayoutManager.VERTICAL)
         rvArticle?.adapter = newsAdapter
-        newsAdapter?.register(Article::class.java, NewsBinderView(this) as ItemViewBinder<Article, RecyclerView.ViewHolder>)
+        newsAdapter?.register(Article::class.java, SearchBinderView(this) as ItemViewBinder<Article, RecyclerView.ViewHolder>)
     }
 
     override fun onGetNewsEverythingSuccessful(articles: List<Article>) {

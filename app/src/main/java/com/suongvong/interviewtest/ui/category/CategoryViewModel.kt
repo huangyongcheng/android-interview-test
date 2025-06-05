@@ -11,26 +11,4 @@ import retrofit2.Response
 
 class CategoryViewModel : BaseViewModel<CategoryNavigator>() {
 
-     fun getNewsEverything(context: Context?, searchKeyWord:String ="today") {
-         val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getEverything(searchKey=searchKeyWord,language = context?.getLanguage())
-
-        call.enqueue(object : Callback<NewsResponse> {
-            override fun onResponse(
-                call: Call<NewsResponse>,
-                response: Response<NewsResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val articles = response.body()?.articles ?: emptyList()
-                    view.onGetNewsEverythingSuccessful(articles)
-                } else {
-                    view.onGetNewsEverythingFail()
-                }
-            }
-
-            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                view.onGetNewsEverythingFail()
-            }
-        })
-    }
 }

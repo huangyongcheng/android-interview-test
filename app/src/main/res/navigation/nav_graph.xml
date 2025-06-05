@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.suongvong.interviewtest.ui.search.SearchFragment"
-        android:label="Search">
+        android:label="">
         <argument
             android:name="searchParams"
             app:argType="com.suongvong.interviewtest.model.SearchParams"

@@ -18,10 +18,10 @@
             android:paddingStart="16dp"
             android:gravity="center_vertical"
             android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Select Language"
+            android:text="@string/select_language"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/white" />
@@ -37,9 +37,16 @@
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
-    <Button
+    <TextView
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_button_cancel"
         android:id="@+id/btnClose"
-        android:text="Close"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:text="@string/close"
+        android:gravity="center"
+        android:layout_gravity="right"
+        android:textColor="@color/white"
+        android:layout_width="100dp"
+        android:layout_height="40dp"/>
 </LinearLayout>

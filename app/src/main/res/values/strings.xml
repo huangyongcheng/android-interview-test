@@ -36,6 +36,12 @@
     <string name="label_sort_by">Sort by:</string>
     <string name="btn_search">Search</string>
     <string name="btn_close">Close</string>
+    <string name="label_keyword_error">key word can not be blank</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
+    <string name="search_news">Search News</string>
+    <string name="close">Close</string>
+    <string name="select_language">Select Language</string>
 
     <string-array name="news_categories">
         <item>Business</item>
@@ -47,14 +53,14 @@
     </string-array>
 
     <string-array name="sort_options">
-        <item>relevancy</item>
-        <item>popularity</item>
-        <item>publishedAt</item>
+        <item>Relevancy</item>
+        <item>Popularity</item>
+        <item>PublishedAt</item>
     </string-array>
 
     <string-array name="news_search_in">
-        <item>title</item>
-        <item>description</item>
-        <item>content</item>
+        <item>Title</item>
+        <item>Description</item>
+        <item>Content</item>
     </string-array>
 </resources>

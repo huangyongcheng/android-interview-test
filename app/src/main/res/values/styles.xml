@@ -6,13 +6,14 @@
         <item name="android:textCursorDrawable">@color/colorPrimary</item>
     </style>
 
-    <declare-styleable name="SwipeMenuLayout">
-        <attr name="leftMenuView" format="reference" />
-        <attr name="rightMenuView" format="reference" />
-        <attr name="contentView" format="reference" />
-        <attr name="canRightSwipe" format="boolean" />
-        <attr name="canLeftSwipe" format="boolean" />
-        <attr name="fraction" format="float" />
-    </declare-styleable>
+    <style name="CustomDatePickerDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item> <!-- Android < API 29 -->
+        <item name="android:datePickerStyle">@style/CustomDatePicker</item>
+    </style>
+
+    <style name="CustomDatePicker" parent="android:Widget.Material.DatePicker">
+        <item name="android:headerBackground">@color/colorPrimary</item>
+        <item name="android:calendarViewShown">true</item>
+    </style>
 
 </resources>

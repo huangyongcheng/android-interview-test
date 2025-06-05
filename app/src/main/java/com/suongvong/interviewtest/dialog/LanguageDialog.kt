@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +27,7 @@ class LanguageDialog(
         setContentView(R.layout.dialog_language_list)
 
         val recyclerView = findViewById<RecyclerView>(R.id.rvLanguages)
-        val btnClose = findViewById<Button>(R.id.btnClose)
+        val btnClose = findViewById<TextView>(R.id.btnClose)
 
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = LanguageAdapter(languages) { selected ->

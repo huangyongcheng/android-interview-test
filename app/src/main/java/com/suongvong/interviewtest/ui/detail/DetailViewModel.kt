@@ -9,26 +9,4 @@ import retrofit2.Response
 
 class DetailViewModel : BaseViewModel<DetailNavigator>() {
 
-     fun getTopHeadlines() {
-         val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getTopHeadlines()
-
-        call.enqueue(object : Callback<NewsResponse> {
-            override fun onResponse(
-                call: Call<NewsResponse>,
-                response: Response<NewsResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val articles = response.body()?.articles ?: emptyList()
-                    view.onGetTopHeadlinesSuccessful(articles)
-                } else {
-                    view.onGetTopHeadlinesFail()
-                }
-            }
-
-            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-               view.onGetTopHeadlinesFail()
-            }
-        })
-    }
 }
