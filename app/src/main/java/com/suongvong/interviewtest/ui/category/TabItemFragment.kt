@@ -67,6 +67,10 @@ class TabItemFragment(var categoryName:String): BaseFragment<CategoryViewModel>(
 
     }
 
+    override fun onApiFailure() {
+
+    }
+
     override fun onItemClick(article: Article?) {
 
 //        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(article)

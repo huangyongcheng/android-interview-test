@@ -1,10 +1,12 @@
 package com.suongvong.interviewtest.ui.search
 
 import android.content.Context
+import com.google.gson.Gson
 import com.suongvong.interviewtest.enums.SearchType
 import com.suongvong.interviewtest.extentions.getLanguage
 import com.suongvong.interviewtest.model.SearchParams
 import com.suongvong.interviewtest.network.RetrofitClient
+import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.NewsResponse
 import com.suongvong.interviewtest.ui.base.BaseViewModel
 import retrofit2.Call
@@ -41,12 +43,13 @@ class SearchViewModel : BaseViewModel<SearchNavigator>() {
                     val articles = response.body()?.articles ?: emptyList()
                     view.onGetNewsEverythingSuccessful(articles)
                 } else {
-                    view.onGetNewsEverythingFail()
+                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
+                    view.onGetNewsEverythingFail(errorResponse)
                 }
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                view.onGetNewsEverythingFail()
+                view.onApiFailure()
             }
         })
     }

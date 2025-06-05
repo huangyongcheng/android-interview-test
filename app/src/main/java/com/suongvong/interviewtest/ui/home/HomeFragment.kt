@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +21,7 @@ import com.suongvong.interviewtest.adapter.CarouselAdapter
 import com.suongvong.interviewtest.adapter.NewsAdapter
 import com.suongvong.interviewtest.binder.NewsBinderView
 import com.suongvong.interviewtest.dialog.DialogFactory
+import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
@@ -182,8 +184,8 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
 
     }
 
-    override fun onGetTopHeadlinesFail() {
-
+    override fun onGetTopHeadlinesFail(apiErrorResponse: ApiErrorResponse) {
+        Toast.makeText(context, apiErrorResponse.message, Toast.LENGTH_LONG).show()
     }
 
     override fun onGetNewsEverythingSuccessful(articles: List<Article>) {
@@ -194,7 +196,11 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
 
     }
 
-    override fun onGetNewsEverythingFail() {
+    override fun onGetNewsEverythingFail(apiErrorResponse: ApiErrorResponse) {
+        Toast.makeText(context, apiErrorResponse.message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onApiFailure() {
 
     }
 

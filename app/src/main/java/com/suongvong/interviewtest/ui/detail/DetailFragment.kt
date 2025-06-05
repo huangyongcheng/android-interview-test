@@ -76,6 +76,10 @@ class DetailFragment : BaseFragment<DetailViewModel>(), DetailNavigator, NewsBin
 
     }
 
+    override fun onApiFailure() {
+        TODO("Not yet implemented")
+    }
+
     override fun onItemClick(contact: Article?) {
         TODO("Not yet implemented")
     }
