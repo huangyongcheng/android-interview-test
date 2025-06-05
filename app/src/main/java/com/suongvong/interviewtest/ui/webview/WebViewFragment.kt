@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.suongvong.interviewtest.R
@@ -66,6 +65,10 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
 
     override fun onGetTopHeadlinesFail() {
 
+    }
+
+    override fun onApiFailure() {
+        TODO("Not yet implemented")
     }
 
     override fun onItemClick(contact: Article?) {

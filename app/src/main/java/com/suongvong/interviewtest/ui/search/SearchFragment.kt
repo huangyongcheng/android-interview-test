@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,7 @@ import com.suongvong.interviewtest.binder.SearchBinderView
 import com.suongvong.interviewtest.constants.SEARCH_PARAMS
 import com.suongvong.interviewtest.dialog.DialogFactory
 import com.suongvong.interviewtest.model.SearchParams
+import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
@@ -92,8 +94,12 @@ class SearchFragment: BaseFragment<SearchViewModel>(), SearchNavigator, SearchBi
 
     }
 
-    override fun onGetNewsEverythingFail() {
+    override fun onGetNewsEverythingFail(apiErrorResponse: ApiErrorResponse) {
+        Toast.makeText(context, apiErrorResponse.message,Toast.LENGTH_LONG).show()
+    }
 
+    override fun onApiFailure() {
+        TODO("Not yet implemented")
     }
 
     override fun onItemClick(article: Article?) {

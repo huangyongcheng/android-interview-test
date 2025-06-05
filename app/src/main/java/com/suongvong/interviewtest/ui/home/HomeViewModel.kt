@@ -1,8 +1,10 @@
 package com.suongvong.interviewtest.ui.home
 
 import android.content.Context
+import com.google.gson.Gson
 import com.suongvong.interviewtest.extentions.getLanguage
 import com.suongvong.interviewtest.network.RetrofitClient
+import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.NewsResponse
 import com.suongvong.interviewtest.ui.base.BaseViewModel
 import retrofit2.Call
@@ -11,8 +13,8 @@ import retrofit2.Response
 
 class HomeViewModel : BaseViewModel<HomeNavigator>() {
 
-     fun getNewsEverything(context: Context?) {
-         val view = getNavigator() ?: return
+    fun getNewsEverything(context: Context?) {
+        val view = getNavigator() ?: return
         val call = RetrofitClient.instance.getEverything()
 
         call.enqueue(object : Callback<NewsResponse> {
@@ -24,12 +26,13 @@ class HomeViewModel : BaseViewModel<HomeNavigator>() {
                     val articles = response.body()?.articles ?: emptyList()
                     view.onGetNewsEverythingSuccessful(articles)
                 } else {
-                    view.onGetNewsEverythingFail()
+                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
+                    view.onGetNewsEverythingFail(errorResponse)
                 }
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-               view.onGetTopHeadlinesFail()
+                view.onApiFailure()
             }
         })
     }
@@ -47,12 +50,13 @@ class HomeViewModel : BaseViewModel<HomeNavigator>() {
                     val articles = response.body()?.articles ?: emptyList()
                     view.onGetTopHeadlinesSuccessful(articles)
                 } else {
-                    view.onGetTopHeadlinesFail()
+                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
+                    view.onGetTopHeadlinesFail(errorResponse)
                 }
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                view.onGetTopHeadlinesFail()
+                view.onApiFailure()
             }
         })
     }
