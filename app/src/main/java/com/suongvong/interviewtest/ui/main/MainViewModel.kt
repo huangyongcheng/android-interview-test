@@ -17,29 +17,4 @@ class MainViewModel(private val repository: DBRepository) : BaseViewModel<MainNa
     }
 
 
-    fun save(qrData: QRData) {
-        val view = getNavigator() ?: return
-        viewModelScope.launch {
-            repository.insert(qrData) { isInsert ->
-                if (isInsert) {
-                    view.onSaveSecretKeySuccess(qrData)
-                } else {
-                    view.onUpdateSecretKeySuccess(qrData)
-                }
-            }
-
-        }
-    }
-
-    fun onProcessDeeplinkData(qrUrl: String) {
-        val view = getNavigator() ?: return
-        QRProcessor.processScannedData(qrUrl,
-            onSuccess = { qrData ->
-                view.onGetDataFromDeeplinkSuccess(qrData)
-            },
-            onError = {
-                view.onInvalidSecretKey()
-            }
-        )
-    }
 }

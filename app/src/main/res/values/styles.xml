@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="Theme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:textCursorDrawable">@color/colorPrimary</item>
     </style>

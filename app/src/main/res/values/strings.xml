@@ -25,5 +25,36 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="hint_keyword">Enter keyword</string>
+    <string name="label_from_date">From date</string>
+    <string name="label_to_date">To date</string>
+    <string name="label_search_type">Search type:</string>
+    <string name="search_type_everything">All articles</string>
+    <string name="search_type_top_headlines">Top headlines</string>
+    <string name="label_category">Category:</string>
+    <string name="label_search_in">Search in:</string>
+    <string name="label_sort_by">Sort by:</string>
+    <string name="btn_search">Search</string>
+    <string name="btn_close">Close</string>
 
+    <string-array name="news_categories">
+        <item>Business</item>
+        <item>Entertainment</item>
+        <item>Health</item>
+        <item>Science</item>
+        <item>Sports</item>
+        <item>Technology</item>
+    </string-array>
+
+    <string-array name="sort_options">
+        <item>relevancy</item>
+        <item>popularity</item>
+        <item>publishedAt</item>
+    </string-array>
+
+    <string-array name="news_search_in">
+        <item>title</item>
+        <item>description</item>
+        <item>content</item>
+    </string-array>
 </resources>

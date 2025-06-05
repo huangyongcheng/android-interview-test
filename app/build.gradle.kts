@@ -11,7 +11,7 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "com.suongvong.interviewtest"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0-${System.getenv("VERSION_SHA")}"

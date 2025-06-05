@@ -1,4 +1,4 @@
-package com.suongvong.interviewtest.ui.home
+package com.suongvong.interviewtest.ui.category
 
 import android.content.Context
 import com.suongvong.interviewtest.extentions.getLanguage
@@ -9,7 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeViewModel : BaseViewModel<HomeNavigator>() {
+class CategoryViewModel : BaseViewModel<CategoryNavigator>() {
 
      fun getNewsEverything(context: Context?, searchKeyWord:String ="today") {
          val view = getNavigator() ?: return
@@ -29,30 +29,7 @@ class HomeViewModel : BaseViewModel<HomeNavigator>() {
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-               view.onGetTopHeadlinesFail()
-            }
-        })
-    }
-
-    fun getTopHeadlines() {
-        val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getTopHeadlines()
-
-        call.enqueue(object : Callback<NewsResponse> {
-            override fun onResponse(
-                call: Call<NewsResponse>,
-                response: Response<NewsResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val articles = response.body()?.articles ?: emptyList()
-                    view.onGetTopHeadlinesSuccessful(articles)
-                } else {
-                    view.onGetTopHeadlinesFail()
-                }
-            }
-
-            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                view.onGetTopHeadlinesFail()
+                view.onGetNewsEverythingFail()
             }
         })
     }

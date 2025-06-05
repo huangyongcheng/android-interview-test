@@ -5,8 +5,9 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AuthenticatorApplication"
@@ -18,14 +19,7 @@
         android:theme="@style/Theme"
         tools:targetApi="31">
 
-        <activity
-            android:name=".ui.scan.ScanQRActivity" />
-        <activity
-            android:name=".ui.manual.ManualActivity" />
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true">
-        </activity>
+        <activity android:name=".ui.scan.ScanQRActivity" />
 
         <activity
             android:name=".ui.home.MainActivity2"

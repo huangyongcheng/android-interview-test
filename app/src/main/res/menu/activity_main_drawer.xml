@@ -3,9 +3,31 @@
         android:id="@+id/nav_home"
         android:title="Home" />
     <item
-        android:id="@+id/nav_profile"
-        android:title="Profile" />
+        android:id="@+id/nav_search"
+        android:title="Search" />
+
+    <!-- Submenu for Category -->
     <item
-        android:id="@+id/nav_settings"
-        android:title="Settings" />
+        android:title="Category">
+        <menu>
+            <item
+                android:id="@+id/nav_category_business"
+                android:title="Business" />
+            <item
+                android:id="@+id/nav_category_entertainment"
+                android:title="Entertainment" />
+            <item
+                android:id="@+id/nav_category_health"
+                android:title="Health" />
+            <item
+                android:id="@+id/nav_category_science"
+                android:title="Science" />
+            <item
+                android:id="@+id/nav_category_sports"
+                android:title="Sports" />
+            <item
+                android:id="@+id/nav_category_technology"
+                android:title="Technology" />
+        </menu>
+    </item>
 </menu>

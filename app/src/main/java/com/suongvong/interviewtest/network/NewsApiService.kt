@@ -1,6 +1,7 @@
 package com.suongvong.interviewtest.network
 
 import com.suongvong.interviewtest.constants.API_KEY
+import com.suongvong.interviewtest.constants.DEFAULT_LANGUAGE
 import com.suongvong.interviewtest.network.response.NewsResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -23,8 +24,19 @@ interface NewsApiService {
 
     @GET(EVERYTHING)
     fun getEverything(
-        @Query("q") search: String = "bitcoin",
+        @Query("q") searchKey: String = "bitcoin",
         @Query("language") language: String? = "zh",
+        @Query("apiKey") apiKey: String = API_KEY
+    ): Call<NewsResponse>
+
+    @GET(EVERYTHING)
+    fun searchNews(
+        @Query("q") searchKey: String?= "bitcoin",
+        @Query("from") fromDate: String?,
+        @Query("to") toDate: String?,
+        @Query("sortBy") sortBy: String? = "",
+        @Query("language") language: String? = DEFAULT_LANGUAGE,
+
         @Query("apiKey") apiKey: String = API_KEY
     ): Call<NewsResponse>
 }

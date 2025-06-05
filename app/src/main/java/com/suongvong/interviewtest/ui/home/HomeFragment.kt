@@ -26,7 +26,6 @@ import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
 import com.suongvong.interviewtest.utils.ArticleDataSource
 import com.suongvong.interviewtest.utils.HorizontalMarginItemDecoration
 import com.suongvong.interviewtest.utils.SearchUtils
-import com.suongvong.interviewtest.utils.ZoomOutPageTransformer
 import kotlin.math.abs
 
 class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView.OnItemClickListener {
