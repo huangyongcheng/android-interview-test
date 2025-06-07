@@ -15,115 +15,39 @@ object DialogFactory {
 
     private var currentDialog: WeakReference<AlertDialog>? = null
 
+    fun openLanguageDialog(context: Context?, selectedLanguageItem: (LanguageItem) -> Unit) {
+        context?.let {
 
-    fun showInfoDialog(
-        context: Context,
-        title: String,
-        message: String,
-        positiveButtonText: String,
-        onDismiss: () -> Unit
-    ) {
-        if (currentDialog?.get()?.isShowing == true) {
-            return
+
+            val languages = listOf(
+                LanguageItem("ar", "Arabic", R.drawable.flag_ar),
+                LanguageItem("de", "German", R.drawable.flag_de),
+                LanguageItem("en", "English", R.drawable.flag_en),
+                LanguageItem("es", "Spanish", R.drawable.flag_es),
+                LanguageItem("fr", "French", R.drawable.flag_fr),
+                LanguageItem("he", "Hebrew", R.drawable.flag_he),
+                LanguageItem("it", "Italian", R.drawable.flag_it),
+                LanguageItem("no", "Norwegian", R.drawable.flag_no),
+                LanguageItem("pt", "Portuguese", R.drawable.flag_pt),
+                LanguageItem("ru", "Russian", R.drawable.flag_ru),
+                LanguageItem("sv", "Swedish", R.drawable.flag_sv),
+                LanguageItem("zh", "Chinese", R.drawable.flag_zh),
+
+                )
+
+            LanguageDialog(context, languages) { languageItem ->
+                selectedLanguageItem.invoke(languageItem)
+            }.show()
         }
-
-        val dialog = AlertDialog.Builder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(positiveButtonText) { dialog, _ ->
-                dialog.dismiss()
-                onDismiss()
-                currentDialog = null
-            }
-            .create()
-
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-        currentDialog = WeakReference(dialog)
-        dialog.show()
-
-        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        positiveButton.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
     }
 
-    fun showConfirmationDialog(
-        context: Context,
-        title: String,
-        message: String,
-        positiveButtonText: String,
-        negativeButtonText: String,
-        onConfirmationResult: (Boolean) -> Unit
-    ) {
-        if (currentDialog?.get()?.isShowing == true) {
-            return
+    fun openSearchNewsDialog(context: Context?, onSearch: (SearchParams) -> Unit) {
+        context?.let {
+
+            SearchNewsDialog(context) { result ->
+                onSearch.invoke(result)
+            }.show()
         }
-
-        val dialog = AlertDialog.Builder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(positiveButtonText) { dialog, _ ->
-                dialog.dismiss()
-                onConfirmationResult(true)
-                currentDialog = null
-            }
-            .setNegativeButton(negativeButtonText) { dialog, _ ->
-                dialog.dismiss()
-                onConfirmationResult(false)
-                currentDialog = null
-            }
-            .create()
-
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-        currentDialog = WeakReference(dialog)
-        dialog.show()
-
-        val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        positiveButton.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-
-        val negativeButton: Button = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-        negativeButton.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-    }
-
-    fun showAddInfoDialog(supportFragmentManager: FragmentManager, listener: AddKeyBottomSheetDialog.AddKeyBottomSheetDialogListener) {
-        val bottomSheet = AddKeyBottomSheetDialog(listener)
-        bottomSheet.show(supportFragmentManager, TAG_DIALOG_ADD_INFO)
-    }
-
-
-     fun openLanguageDialog(context: Context?, selectedLanguageItem: (LanguageItem)->Unit) {
-         context?.let {
-
-
-             val languages = listOf(
-                 LanguageItem("ar", "Arabic", R.drawable.flag_ar),
-                 LanguageItem("de", "German", R.drawable.flag_de),
-                 LanguageItem("en", "English", R.drawable.flag_en),
-                 LanguageItem("es", "Spanish", R.drawable.flag_es),
-                 LanguageItem("fr", "French", R.drawable.flag_fr),
-                 LanguageItem("he", "Hebrew", R.drawable.flag_he),
-                 LanguageItem("it", "Italian", R.drawable.flag_it),
-                 LanguageItem("no", "Norwegian", R.drawable.flag_no),
-                 LanguageItem("pt", "Portuguese", R.drawable.flag_pt),
-                 LanguageItem("ru", "Russian", R.drawable.flag_ru),
-                 LanguageItem("sv", "Swedish", R.drawable.flag_sv),
-                 LanguageItem("zh", "Chinese", R.drawable.flag_zh),
-
-                 )
-
-             LanguageDialog(context, languages) { languageItem ->
-                 selectedLanguageItem.invoke(languageItem)
-             }.show()
-         }
-     }
-
-         fun openSearchNewsDialog(context: Context?, onSearch: (SearchParams)->Unit) {
-             context?.let {
-
-                 SearchNewsDialog(context) { result ->
-                     onSearch.invoke(result)
-                 }.show()
-             }
 
     }
 }
