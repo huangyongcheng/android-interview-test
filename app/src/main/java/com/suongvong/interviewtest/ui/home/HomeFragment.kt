@@ -1,37 +1,35 @@
 package com.suongvong.interviewtest.ui.home
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.adapter.TopHeadLinesCarouselAdapter
 import com.suongvong.interviewtest.adapter.NewsAdapter
 import com.suongvong.interviewtest.binder.NewsBinderView
 import com.suongvong.interviewtest.dialog.DialogFactory
+import com.suongvong.interviewtest.extentions.addCarouselEffect
 import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
 import com.suongvong.interviewtest.utils.ArticleDataSource
-import com.suongvong.interviewtest.utils.HorizontalMarginItemDecoration
-import kotlin.math.abs
+import com.suongvong.interviewtest.utils.AutoSlideViewPagerUtil
 
 // cơ chế load more
 // save data từ database hiện thị offline
-class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView.OnItemClickListener {
+class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView.OnItemClickListener,
+    TopHeadLinesCarouselAdapter.TopHeadLinesCarouselLister {
 
     private var rvArticle: RecyclerView? = null
     private var vpTopHead: ViewPager2? = null
@@ -40,6 +38,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
     private var slTopHeadLines: LinearLayout? = null
     private var newsAdapter: NewsAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
+    private var autoSlideUtil: AutoSlideViewPagerUtil? = null
+
 
     override fun getLayoutId(): Int = R.layout.fragment_home
 
@@ -50,23 +50,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
             }
         })[HomeViewModel::class.java]
         return viewModel
-    }
-
-    fun ViewPager2.addCarouselEffect(enableZoom: Boolean = true) {
-        clipChildren = false    // No clipping the left and right items
-        clipToPadding = false   // Show the viewpager in full width without clipping the padding
-        offscreenPageLimit = 3  // Render the left and right items
-        (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER // Remove the scroll effect
-
-        val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(MarginPageTransformer((20 * Resources.getSystem().displayMetrics.density).toInt()))
-        if (enableZoom) {
-            compositePageTransformer.addTransformer { page, position ->
-                val r = 1 - abs(position)
-                page.scaleY = (0.80f + r * 0.20f)
-            }
-        }
-        setPageTransformer(compositePageTransformer)
     }
 
     override fun setupView() {
@@ -84,26 +67,21 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
         viewModel.setNavigator(this)
         setupRecyclerView()
         setupViewPager()
+
         startShimmerByViews(slArticle)
         startShimmerByViews(slTopHeadLines)
-
         viewModel.getTopHeadlines()
         viewModel.getNewsEverything(context)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.news_menu, menu)
-
-//        val searchItem = menu.findItem(R.id.action_search)
-//        val searchView = searchItem.actionView as SearchView
-
-//        SearchUtils.setDebouncedListener(searchView) { query ->
-//            if (query != null) {
-//                viewModel.getNewsEverything(context,query)
-//            }
-//        }
-
         super.onCreateOptionsMenu(menu, inflater)
+
+        val menuItem = menu.findItem(R.id.action_switch_language)
+        val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_language)
+        icon?.setBounds(0, 0, 48, 48)
+        menuItem.icon = icon
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -132,54 +110,22 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
     private var topHeadLinesCarouselAdapter: TopHeadLinesCarouselAdapter? = null
 
     private fun setupViewPager() {
-        // setupCarousel()
-        // val testlist = listOf<String>("A","b","c","t","p")
-        topHeadLinesCarouselAdapter = TopHeadLinesCarouselAdapter(context, items)
+        topHeadLinesCarouselAdapter = TopHeadLinesCarouselAdapter(context, items, this)
+        vpTopHead?.addCarouselEffect(true)
+        vpTopHead?.adapter = topHeadLinesCarouselAdapter
+        autoSlideUtil = AutoSlideViewPagerUtil(vpTopHead)
 
-        val transformer = CompositePageTransformer().apply {
-            addTransformer(MarginPageTransformer(40))
-            addTransformer { page, position ->
-                val scale = 0.85f + (1 - abs(position)) * 0.15f
-                page.scaleY = scale
-                page.scaleX = scale
-                page.alpha = 0.5f + (1 - abs(position)) * 0.5f
-            }
-        }
-        //  vpTopHead?.addCarouselEffect(false)
-
-        vpTopHead?.apply {
-            this.adapter = topHeadLinesCarouselAdapter
-            offscreenPageLimit = 3
-            // setPageTransformer(transformer)
-//            offscreenPageLimit = 3
-            clipToPadding = false
-            clipChildren = false
-            getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-            setPageTransformer(transformer)
-        }
-        //  adapter?.notifyDataSetChanged()
     }
 
-    private fun setupCarousel() {
-
-        vpTopHead?.offscreenPageLimit = 1
-
-        // val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
-        // val currentItemHorizontalMarginPx = resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
-        //val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
-        val pageTransformer = ViewPager2.PageTransformer { page: View, position: Float ->
-            page.translationX = -30 * position
-            page.scaleY = 1 - (0.25f * kotlin.math.abs(position))
-            page.alpha = 0.25f + (1 - kotlin.math.abs(position))
-        }
-        vpTopHead?.setPageTransformer(pageTransformer)
-        val itemDecoration = HorizontalMarginItemDecoration(
-            requireContext(),
-            R.dimen.viewpager_current_item_horizontal_margin
-        )
-        vpTopHead?.addItemDecoration(itemDecoration)
+    override fun onResume() {
+        super.onResume()
+        autoSlideUtil?.start()
     }
 
+    override fun onPause() {
+        super.onPause()
+        autoSlideUtil?.stop()
+    }
 
     override fun onGetTopHeadlinesSuccessful(articles: List<Article>) {
 
@@ -223,5 +169,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
         findNavController().navigate(action)
     }
 
+    override fun onItemTopHeadlineClick(article: Article) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(article)
+        findNavController().navigate(action)
+    }
 
 }

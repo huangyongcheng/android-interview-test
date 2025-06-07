@@ -13,24 +13,11 @@ interface NewsApiService {
 
     companion object {
         const val TOP_HEADLINES = "v2/top-headlines"
-        const val TOP_HEADLINE_SOURCES  = "v2/top-headlines/sources"
+        const val TOP_HEADLINE_SOURCES = "v2/top-headlines/sources"
         const val EVERYTHING = "v2/everything"
 
     }
 
-//    @GET(TOP_HEADLINES)
-//    fun getTopHeadlines(
-//        @Query("country") country: String = "us",
-//        @Query("category") category: String = "business",
-//        @Query("apiKey") apiKey: String = API_KEY
-//    ): Call<NewsResponse>
-
-//    @GET(EVERYTHING)
-//    fun getEverything(
-//        @Query("q") searchKey: String = "bitcoin",
-//        @Query("language") language: String? = "zh",
-//        @Query("apiKey") apiKey: String = API_KEY
-//    ): Call<NewsResponse>
 
     @GET(EVERYTHING)
     fun getEverything(
@@ -39,7 +26,7 @@ interface NewsApiService {
         @Query("to") toDate: String? = null,
         @Query("sortBy") sortBy: String? = null,
         @Query("language") language: String? = DEFAULT_LANGUAGE,
-        @Query("searchIn") searchIn:String?=null,
+        @Query("searchIn") searchIn: String? = null,
         @Query("apiKey") apiKey: String = API_KEY
     ): Call<NewsResponse>
 

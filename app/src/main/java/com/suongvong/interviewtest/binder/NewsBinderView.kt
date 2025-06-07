@@ -32,23 +32,13 @@ class NewsBinderView(var listener: OnItemClickListener) : ItemViewBinder<Article
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var imageThumbnail: ImageView = itemView.findViewById(R.id.imageThumbnail)
-        private var imageArrow: ImageView = itemView.findViewById(R.id.imageArrow)
-
         private var textTitle: TextView = itemView.findViewById(R.id.textTitle)
         private var textDescription: TextView = itemView.findViewById(R.id.textDescription)
 
-
-
-
-
         fun setData(article: Article?) {
-
-
-
             textTitle.text = article?.title
             textDescription.text = article?.description
             Glide.with(itemView.context).load(article?.urlToImage).into(imageThumbnail)
-
             itemView.setOnClickListener {
                 listener.onItemClick(article)
             }
@@ -61,6 +51,6 @@ class NewsBinderView(var listener: OnItemClickListener) : ItemViewBinder<Article
     }
 
     interface OnItemClickListener {
-        fun onItemClick(contact: Article?)
+        fun onItemClick(article: Article?)
     }
 }

@@ -2,28 +2,22 @@ package com.suongvong.interviewtest.ui
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.suongvong.interviewtest.NewsApplication
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.ui.base.BaseActivity
 import com.google.android.material.navigation.NavigationView
 import com.suongvong.interviewtest.constants.CATEGORY_POSITION
 import com.suongvong.interviewtest.constants.SEARCH_PARAMS
 import com.suongvong.interviewtest.dialog.DialogFactory
-import com.suongvong.interviewtest.ui.main.MainNavigator
-import com.suongvong.interviewtest.ui.main.MainViewModel
-import com.suongvong.interviewtest.ui.main.MainViewModelFactory
 
-class MainActivity : BaseActivity<MainViewModel>(), MainNavigator,
+class MainActivity : BaseActivity(),
     NavigationView.OnNavigationItemSelectedListener {
 
     private var toolBar: Toolbar? = null
@@ -31,16 +25,6 @@ class MainActivity : BaseActivity<MainViewModel>(), MainNavigator,
     private var navView: NavigationView? = null
     private lateinit var navController: NavController
     private lateinit var  appBarConfiguration:AppBarConfiguration
-    
-
-    override fun getViewModelClass() = MainViewModel::class.java
-
-    override fun getViewModelFactory(): ViewModelProvider.Factory {
-        return MainViewModelFactory((application as NewsApplication).repository)
-    }
-
-    override fun setUpNavigator() = viewModel.setNavigator(this)
-
 
     override fun getLayoutId(): Int = R.layout.activity_main
 

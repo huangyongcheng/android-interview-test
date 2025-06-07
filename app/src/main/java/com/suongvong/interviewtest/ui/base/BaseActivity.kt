@@ -5,12 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-abstract class BaseActivity<VM : ViewModel> : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
-    protected lateinit var viewModel: VM
-    abstract fun getViewModelClass(): Class<VM>
-    abstract fun getViewModelFactory(): ViewModelProvider.Factory
-    abstract fun setUpNavigator()
     abstract fun setupView()
     abstract fun setupData()
     abstract fun getLayoutId(): Int
@@ -18,8 +14,6 @@ abstract class BaseActivity<VM : ViewModel> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
-        viewModel = ViewModelProvider(this, getViewModelFactory())[getViewModelClass()]
-        setUpNavigator()
         setupView()
         setupData()
     }

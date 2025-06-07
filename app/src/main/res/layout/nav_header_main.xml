@@ -18,7 +18,6 @@
 
     </ImageView>
     <TextView
-        android:id="@+id/nav_header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -27,7 +26,6 @@
         android:textColor="@android:color/white" />
 
     <TextView
-        android:id="@+id/nav_header_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="huangyongcheng3@gmail.com"

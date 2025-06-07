@@ -2,6 +2,7 @@ package com.suongvong.interviewtest.ui.home
 
 import android.content.Context
 import com.google.gson.Gson
+import com.suongvong.interviewtest.extentions.getLanguage
 import com.suongvong.interviewtest.network.RetrofitClient
 import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.NewsResponse
@@ -15,7 +16,9 @@ class HomeViewModel : BaseViewModel<HomeNavigator>() {
 
     fun getNewsEverything(context: Context?) {
         val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getEverything()
+        val call = RetrofitClient.instance.getEverything(
+            language = context?.getLanguage()
+        )
 
         call.enqueue(object : Callback<NewsResponse> {
             override fun onResponse(
