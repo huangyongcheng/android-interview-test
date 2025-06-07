@@ -8,32 +8,30 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.suongvong.interviewtest.NewsApplication
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.ui.base.BaseActivity
 import com.google.android.material.navigation.NavigationView
+import com.suongvong.interviewtest.constants.CATEGORY_POSITION
 import com.suongvong.interviewtest.constants.SEARCH_PARAMS
 import com.suongvong.interviewtest.dialog.DialogFactory
-import com.suongvong.interviewtest.ui.category.CategoryFragment
 import com.suongvong.interviewtest.ui.main.MainNavigator
 import com.suongvong.interviewtest.ui.main.MainViewModel
 import com.suongvong.interviewtest.ui.main.MainViewModelFactory
-import com.suongvong.interviewtest.ui.search.SearchFragment
 
 class MainActivity : BaseActivity<MainViewModel>(), MainNavigator,
-     NavigationView.OnNavigationItemSelectedListener {
+    NavigationView.OnNavigationItemSelectedListener {
 
     private var toolBar: Toolbar? = null
     private var drawerLayout: DrawerLayout? = null
     private var navView: NavigationView? = null
-    private  lateinit var toggle: ActionBarDrawerToggle
     private lateinit var navController: NavController
-
+    private lateinit var  appBarConfiguration:AppBarConfiguration
+    
 
     override fun getViewModelClass() = MainViewModel::class.java
 
@@ -53,96 +51,47 @@ class MainActivity : BaseActivity<MainViewModel>(), MainNavigator,
         navView = findViewById(R.id.nav_view)
         navView?.setNavigationItemSelectedListener(this)
 
-
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.nav_host_fragment, HomeFragment())
-//            .commit()
         setSupportActionBar(toolBar)
-        setupActionBarDrawerToggle()
+        setupNavigationController()
+
+
+
+    }
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun setupNavigationController(){
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment),
+         appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.searchFragment,
+                R.id.categoryFragment
+            ),
             drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            if (destination.id == R.id.homeFragment) {
-//                supportActionBar?.setDisplayHomeAsUpEnabled(false)
-//                toggle.isDrawerIndicatorEnabled = true
-//                drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//                toggle.syncState()
-//            } else {
-//                supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//                toggle.isDrawerIndicatorEnabled = false
-//                drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-//                toggle.syncState()
-//            }
-//        }
-
-
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    private fun setupActionBarDrawerToggle(){
-        toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolBar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-
-        drawerLayout?.addDrawerListener(toggle)
-        toggle.syncState()
-    }
-
     override fun setupData() {
         toolBar?.title = getString(R.string.app_name)
 
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when {
-            toggle.onOptionsItemSelected(item) -> true
-            item.itemId == android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-
-
-
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, SearchFragment())
-                    .commit()
+                navController.navigate(R.id.homeFragment)
             }
 
             R.id.nav_search -> {
-//                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.nav_host_fragment, DetailFragment())
-//                    .commit()
-                DialogFactory.openSearchNewsDialog(this){
-
-//                    val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment(it)
-//                    navController.navigate(action)
-
+                DialogFactory.openSearchNewsDialog(this) {
                     val bundle = Bundle().apply {
-                        putParcelable(SEARCH_PARAMS,it)
+                        putParcelable(SEARCH_PARAMS, it)
                     }
                     navController.navigate(R.id.searchFragment, bundle)
                 }
@@ -153,17 +102,30 @@ class MainActivity : BaseActivity<MainViewModel>(), MainNavigator,
             R.id.nav_category_health,
             R.id.nav_category_science,
             R.id.nav_category_sports,
-            R.id.nav_category_technology->{
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, CategoryFragment())
-                    .commit()
+            R.id.nav_category_technology -> {
+                val categoryIndex = when (item.itemId) {
+                    R.id.nav_category_business -> 0
+                    R.id.nav_category_entertainment -> 1
+                    R.id.nav_category_health -> 2
+                    R.id.nav_category_science -> 3
+                    R.id.nav_category_sports -> 4
+                    R.id.nav_category_technology -> 5
+                    else -> -1
+                }
+
+                if (categoryIndex != -1) {
+                    val bundle = Bundle().apply {
+                        putInt(CATEGORY_POSITION, categoryIndex)
+                    }
+                    navController.navigate(R.id.categoryFragment, bundle)
+                }
             }
-
-
         }
+
         drawerLayout?.closeDrawers()
         return true
     }
+
 
     override fun onBackPressed() {
         if (drawerLayout?.isDrawerOpen(GravityCompat.START) == true) {

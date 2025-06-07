@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -29,7 +28,8 @@ import com.suongvong.interviewtest.utils.ArticleDataSource
 import com.suongvong.interviewtest.utils.HorizontalMarginItemDecoration
 import com.suongvong.interviewtest.utils.SearchUtils
 import kotlin.math.abs
-
+// cơ chế load more
+// save data từ database hiện thị offline
 class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView.OnItemClickListener {
 
     private var rvArticle: RecyclerView? = null
@@ -79,30 +79,16 @@ class HomeFragment: BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView
         setupRecyclerView()
         setupViewPager()
 
-        viewModel.getTopHeadlines()
-        viewModel.getNewsEverything(context)
+//        viewModel.getTopHeadlines()
+//        viewModel.getNewsEverything(context)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.news_menu, menu)
-
-//        val searchItem = menu.findItem(R.id.action_search)
-//        val searchView = searchItem.actionView as SearchView
-
-//        SearchUtils.setDebouncedListener(searchView) { query ->
-//            if (query != null) {
-//                viewModel.getNewsEverything(context,query)
-//            }
-//        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_switch_language -> {
                 DialogFactory.openLanguageDialog(context){
-                    viewModel.getNewsEverything(context)
+                 //   viewModel.getNewsEverything(context)
                 }
                 true
             }
