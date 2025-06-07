@@ -21,5 +21,6 @@
     <color name="tab_text_selected_color">#000000</color>
     <color name="tab_indicator_color">#FF5722</color>
     <color name="tab_ripple_color">#33FF5722</color> <!-- 20% alpha -->
+    <color name="shimmer_background_color">#E0E0E0</color>
 
 </resources>

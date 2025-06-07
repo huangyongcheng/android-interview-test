@@ -74,12 +74,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("androidx.paging:paging-runtime:2.0.0")
-//    implementation("com.github.bumptech.glide:glide:3.8.0")
-//    kapt("com.github.bumptech.glide:compiler:4.9.0")
 
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
 
 }

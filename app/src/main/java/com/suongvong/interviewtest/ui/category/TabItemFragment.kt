@@ -1,6 +1,7 @@
 package com.suongvong.interviewtest.ui.category
 
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +20,7 @@ import com.suongvong.interviewtest.utils.ArticleDataSource
 class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(), CategoryNavigator, NewsBinderView.OnItemClickListener {
 
     private var rvArticle: RecyclerView? = null
+    private var slArticle: LinearLayout? = null
     private var newsAdapter: NewsAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -37,6 +39,7 @@ class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(),
     override fun setupView() {
         super.setupView()
         rvArticle = findViewById(R.id.rvArticle) as RecyclerView
+        slArticle = findViewById(R.id.slArticle) as LinearLayout
 
     }
 
@@ -44,6 +47,7 @@ class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(),
         viewModel = setupViewModel()
         viewModel.setNavigator(this)
         setupRecyclerView()
+        startShimmerByViews(slArticle)
         viewModel.getTopHeadlines(category = category)
     }
 
@@ -62,11 +66,13 @@ class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(),
         ArticleDataSource.createDataSource(articles).observe(this) {
             newsAdapter?.submitList(null)
             newsAdapter?.submitList(it)
+            stopShimmerByViews(slArticle)
         }
     }
 
     override fun onGetTopHeadlinesFail(apiErrorResponse: ApiErrorResponse) {
         Toast.makeText(context, apiErrorResponse.message, Toast.LENGTH_LONG).show()
+        stopShimmerByViews(slArticle)
 
     }
 
@@ -76,7 +82,7 @@ class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(),
 
     override fun onItemClick(contact: Article?) {
 
-        val action =  CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(contact)
+        val action = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(contact)
         findNavController().navigate(action)
     }
 

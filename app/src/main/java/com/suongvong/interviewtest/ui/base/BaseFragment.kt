@@ -4,6 +4,7 @@ package com.suongvong.interviewtest.ui.base
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import com.suongvong.interviewtest.utils.ShimmerHelper
 
 abstract class BaseFragment<V : BaseViewModel<*>> : Fragment() {
     protected abstract fun getLayoutId(): Int
@@ -39,6 +40,29 @@ abstract class BaseFragment<V : BaseViewModel<*>> : Fragment() {
 
 
 
+    open fun startShimmerByViews(vararg views: View?) {
+
+        activity?.runOnUiThread {
+            views.forEach { view ->
+                view?.let {
+                    it.visibility = View.VISIBLE
+                    ShimmerHelper.findAndStartShimmer(it)
+                }
+            }
+        }
+    }
+
+    open fun stopShimmerByViews(vararg views: View?) {
+
+        activity?.runOnUiThread {
+            views.forEach { view ->
+                view?.let {
+                    it.visibility = View.GONE
+                    ShimmerHelper.findAndStopShimmer(it)
+                }
+            }
+        }
+    }
 
 }
 
