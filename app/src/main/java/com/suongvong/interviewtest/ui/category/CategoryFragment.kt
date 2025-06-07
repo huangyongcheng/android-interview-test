@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.suongvong.interviewtest.R
-import com.suongvong.interviewtest.adapter.ViewPagerAdapter
+import com.suongvong.interviewtest.adapter.CategoryTabAdapter
 import com.suongvong.interviewtest.constants.CATEGORY_POSITION
 import com.suongvong.interviewtest.extentions.setOnTabSelected
 import com.suongvong.interviewtest.interfaces.OnTabSelectedListener
@@ -41,7 +41,7 @@ class CategoryFragment : Fragment(), OnTabSelectedListener {
         }
 
 
-        val adapter = ViewPagerAdapter(requireActivity(), fragmentList)
+        val adapter = CategoryTabAdapter(requireActivity(), fragmentList)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

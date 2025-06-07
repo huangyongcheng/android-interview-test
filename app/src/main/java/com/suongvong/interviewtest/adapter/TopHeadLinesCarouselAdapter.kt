@@ -11,25 +11,37 @@ import com.bumptech.glide.Glide
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.network.response.Article
 
-class TopHeadLinesCarouselAdapter(val context:Context?, private val items: List<Article>) :
+class TopHeadLinesCarouselAdapter(val context: Context?, private val items: List<Article>, val listener:TopHeadLinesCarouselLister) :
     RecyclerView.Adapter<TopHeadLinesCarouselAdapter.CarouselViewHolder>() {
 
+    interface TopHeadLinesCarouselLister{
+        fun onItemTopHeadlineClick(article: Article)
+    }
     inner class CarouselViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView.findViewById(R.id.textView)
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
+        val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
+        val imgThumbnail: ImageView = itemView.findViewById(R.id.imgThumbnail)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_carousel, parent, false)
+            .inflate(R.layout.top_head_line_item_layout, parent, false)
         return CarouselViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
-        holder.textView.text = items[position].title
+        val article = items[position]
+        holder.tvTitle.text = article.title
         if (context != null) {
-            Glide.with(context).load(items[position].urlToImage).into(holder.imageView)
+            Glide.with(context).load(article.urlToImage).into(holder.imgThumbnail)
         }
+
+        holder.itemView.setOnClickListener {
+            listener.onItemTopHeadlineClick(article)
+        }
+
+
+
+
     }
 
     override fun getItemCount(): Int = items.size

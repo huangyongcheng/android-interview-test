@@ -39,7 +39,7 @@ class DetailFragment : BaseFragment<DetailViewModel>(), DetailNavigator, NewsBin
         textTitle = findViewById(R.id.textTitle) as TextView
         textContent = findViewById(R.id.textContent) as TextView
         textUrl = findViewById(R.id.textUrl) as TextView
-        imageView = findViewById(R.id.imageView) as ImageView
+        imageView = findViewById(R.id.imgThumbnail) as ImageView
 
         textUrl?.setOnClickListener(this)
 

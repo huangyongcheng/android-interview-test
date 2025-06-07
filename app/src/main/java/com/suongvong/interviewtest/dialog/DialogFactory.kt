@@ -1,19 +1,13 @@
 package com.suongvong.interviewtest.dialog
 
 import android.content.Context
-import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import com.suongvong.interviewtest.R
-import com.suongvong.interviewtest.constants.TAG_DIALOG_ADD_INFO
 import com.suongvong.interviewtest.model.LanguageItem
 import com.suongvong.interviewtest.model.SearchParams
 import java.lang.ref.WeakReference
 
 object DialogFactory {
-
-    private var currentDialog: WeakReference<AlertDialog>? = null
 
     fun openLanguageDialog(context: Context?, selectedLanguageItem: (LanguageItem) -> Unit) {
         context?.let {
