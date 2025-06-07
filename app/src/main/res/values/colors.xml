@@ -16,4 +16,10 @@
     <color name="color_button_right_invoice_shadow3">#20CCCCCC</color>
     <color name="color_button_right_invoice_shadow4">#30CCCCCC</color>
     <color name="color_button_right_invoice_shadow5">#50CCCCCC</color>
+    <color name="tab_background_color">#FFFFFF</color>
+    <color name="tab_text_color">#888888</color>
+    <color name="tab_text_selected_color">#000000</color>
+    <color name="tab_indicator_color">#FF5722</color>
+    <color name="tab_ripple_color">#33FF5722</color> <!-- 20% alpha -->
+
 </resources>

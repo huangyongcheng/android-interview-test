@@ -10,18 +10,15 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.adapter.ViewPagerAdapter
+import com.suongvong.interviewtest.constants.CATEGORY_POSITION
+import com.suongvong.interviewtest.extentions.setOnTabSelected
+import com.suongvong.interviewtest.interfaces.OnTabSelectedListener
 
-class CategoryFragment: Fragment() {
+class CategoryFragment : Fragment(), OnTabSelectedListener {
 
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
-    private val fragmentList = listOf(
-        TabItemFragment(""),
-
-    )
-
-    private val tabTitles = listOf("Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,19 +32,31 @@ class CategoryFragment: Fragment() {
 
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
+        viewPager.isUserInputEnabled = false
+
+        val tabTitles = resources.getStringArray(R.array.news_categories)
+        val fragmentList = mutableListOf<Fragment>()
+        tabTitles.forEach {
+            fragmentList.add(TabItemFragment(it))
+        }
+
 
         val adapter = ViewPagerAdapter(requireActivity(), fragmentList)
         viewPager.adapter = adapter
 
-        // Kết nối ViewPager với TabLayout
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+
+        tabLayout.setOnTabSelected(this)
+        val categoryPosition = arguments?.getInt(CATEGORY_POSITION)?:0
+        viewPager.currentItem = categoryPosition
+
     }
 
-
-
-
+    override fun onTabSelected(position: Int) {
+        viewPager.currentItem = position
+    }
 
 
 }

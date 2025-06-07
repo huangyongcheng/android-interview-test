@@ -4,6 +4,7 @@ import com.suongvong.interviewtest.constants.API_KEY
 import com.suongvong.interviewtest.constants.DEFAULT_COUNTRY
 import com.suongvong.interviewtest.constants.DEFAULT_LANGUAGE
 import com.suongvong.interviewtest.network.response.NewsResponse
+import com.suongvong.interviewtest.network.response.NewsSourceResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,6 +13,7 @@ interface NewsApiService {
 
     companion object {
         const val TOP_HEADLINES = "v2/top-headlines"
+        const val TOP_HEADLINE_SOURCES  = "v2/top-headlines/sources"
         const val EVERYTHING = "v2/everything"
 
     }
@@ -32,7 +34,7 @@ interface NewsApiService {
 
     @GET(EVERYTHING)
     fun getEverything(
-        @Query("q") searchKey: String? = null,
+        @Query("q") searchKey: String? = "today",
         @Query("from") fromDate: String? = null,
         @Query("to") toDate: String? = null,
         @Query("sortBy") sortBy: String? = null,
@@ -50,13 +52,11 @@ interface NewsApiService {
         @Query("apiKey") apiKey: String = API_KEY
     ): Call<NewsResponse>
 
-    @GET(EVERYTHING)
-    fun searchNews(
-        @Query("q") searchKey: String? = "bitcoin",
-        @Query("from") fromDate: String?,
-        @Query("to") toDate: String?,
-        @Query("sortBy") sortBy: String? = "",
+    @GET(TOP_HEADLINE_SOURCES)
+    fun getTopHeadlineSources(
+        @Query("country") country: String = DEFAULT_COUNTRY,
         @Query("language") language: String? = DEFAULT_LANGUAGE,
         @Query("apiKey") apiKey: String = API_KEY
-    ): Call<NewsResponse>
+    ): Call<NewsSourceResponse>
+
 }

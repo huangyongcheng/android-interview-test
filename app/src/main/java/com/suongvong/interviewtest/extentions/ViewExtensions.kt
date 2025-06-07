@@ -6,6 +6,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.google.android.material.tabs.TabLayout
+import com.suongvong.interviewtest.interfaces.OnTabSelectedListener
 import com.suongvong.interviewtest.interfaces.OnTextChangedListener
 
 fun EditText.showKeyboard(delayMillis: Long = 100) {
@@ -23,7 +25,19 @@ fun EditText.setOnTextChangedListener(listener: OnTextChangedListener) {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             listener.onTextChanged(s.toString())
         }
+
         override fun afterTextChanged(s: Editable?) {}
+    })
+}
+
+fun TabLayout.setOnTabSelected(listener: OnTabSelectedListener) {
+    this.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            listener.onTabSelected(tab.position)
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab) {}
+        override fun onTabReselected(tab: TabLayout.Tab) {}
     })
 }
 

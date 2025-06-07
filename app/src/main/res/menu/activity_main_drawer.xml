@@ -1,33 +1,40 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:icon="@drawable/ic_home"
         android:id="@+id/nav_home"
         android:title="@string/home" />
     <item
+        android:icon="@drawable/ic_search"
         android:id="@+id/nav_search"
         android:title="@string/search_news" />
 
-    <!-- Submenu for Category -->
     <item
-        android:title="Category">
+        android:title="@string/top_headlines">
         <menu>
             <item
+                android:icon="@drawable/ic_business"
                 android:id="@+id/nav_category_business"
-                android:title="Business" />
+                android:title="@string/business" />
             <item
+                android:icon="@drawable/ic_entertainment"
                 android:id="@+id/nav_category_entertainment"
-                android:title="Entertainment" />
+                android:title="@string/entertainment" />
             <item
+                android:icon="@drawable/ic_health"
                 android:id="@+id/nav_category_health"
-                android:title="Health" />
+                android:title="@string/health" />
             <item
+                android:icon="@drawable/ic_science"
                 android:id="@+id/nav_category_science"
-                android:title="Science" />
+                android:title="@string/science" />
             <item
+                android:icon="@drawable/ic_sport"
                 android:id="@+id/nav_category_sports"
-                android:title="Sports" />
+                android:title="@string/sports" />
             <item
+                android:icon="@drawable/ic_technology"
                 android:id="@+id/nav_category_technology"
-                android:title="Technology" />
+                android:title="@string/technology" />
         </menu>
     </item>
 </menu>

@@ -1,25 +1,28 @@
 package com.suongvong.interviewtest.ui.category
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.adapter.NewsAdapter
 import com.suongvong.interviewtest.binder.NewsBinderView
+import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
 import com.suongvong.interviewtest.utils.ArticleDataSource
 
-class TabItemFragment(var categoryName:String): BaseFragment<CategoryViewModel>(), CategoryNavigator, NewsBinderView.OnItemClickListener {
+class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(), CategoryNavigator, NewsBinderView.OnItemClickListener {
 
     private var rvArticle: RecyclerView? = null
     private var newsAdapter: NewsAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
 
-    override fun getLayoutId(): Int  = R.layout.fragment_tab_item
+    override fun getLayoutId(): Int = R.layout.fragment_tab_item
 
     override fun setupViewModel(): CategoryViewModel {
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
@@ -41,12 +44,11 @@ class TabItemFragment(var categoryName:String): BaseFragment<CategoryViewModel>(
         viewModel = setupViewModel()
         viewModel.setNavigator(this)
         setupRecyclerView()
-     //   viewModel.getNewsEverything(context, categoryName = categoryName)
+        viewModel.getTopHeadlines(category = category)
     }
 
 
-
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         newsAdapter = NewsAdapter()
 
@@ -55,15 +57,16 @@ class TabItemFragment(var categoryName:String): BaseFragment<CategoryViewModel>(
         newsAdapter?.register(Article::class.java, NewsBinderView(this) as ItemViewBinder<Article, RecyclerView.ViewHolder>)
     }
 
-    override fun onGetNewsEverythingSuccessful(articles: List<Article>) {
-        ArticleDataSource.createDataSource(articles).observe(this){
+
+    override fun onGetTopHeadlinesSuccessful(articles: List<Article>) {
+        ArticleDataSource.createDataSource(articles).observe(this) {
             newsAdapter?.submitList(null)
             newsAdapter?.submitList(it)
         }
-
     }
 
-    override fun onGetNewsEverythingFail() {
+    override fun onGetTopHeadlinesFail(apiErrorResponse: ApiErrorResponse) {
+        Toast.makeText(context, apiErrorResponse.message, Toast.LENGTH_LONG).show()
 
     }
 
@@ -71,13 +74,11 @@ class TabItemFragment(var categoryName:String): BaseFragment<CategoryViewModel>(
 
     }
 
-    override fun onItemClick(article: Article?) {
+    override fun onItemClick(contact: Article?) {
 
-//        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(article)
-//        findNavController().navigate(action)
+        val action =  CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(contact)
+        findNavController().navigate(action)
     }
-
-
 
 
 }

@@ -2,10 +2,10 @@ package com.suongvong.interviewtest.ui.home
 
 import android.content.Context
 import com.google.gson.Gson
-import com.suongvong.interviewtest.extentions.getLanguage
 import com.suongvong.interviewtest.network.RetrofitClient
 import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.NewsResponse
+import com.suongvong.interviewtest.network.response.NewsSourceResponse
 import com.suongvong.interviewtest.ui.base.BaseViewModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,6 +56,30 @@ class HomeViewModel : BaseViewModel<HomeNavigator>() {
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+                view.onApiFailure()
+            }
+        })
+    }
+
+    fun getTopHeadlineSources() {
+        val view = getNavigator() ?: return
+        val call = RetrofitClient.instance.getTopHeadlineSources()
+
+        call.enqueue(object : Callback<NewsSourceResponse> {
+            override fun onResponse(
+                call: Call<NewsSourceResponse>,
+                response: Response<NewsSourceResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val newsSourceList = response.body()?.sources ?: emptyList()
+                  //  view.onGetTopHeadlineSourcesSuccessful(newsSourceList)
+                } else {
+                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
+                  //  view.onGetTopHeadlineSourcesFail(errorResponse)
+                }
+            }
+
+            override fun onFailure(call: Call<NewsSourceResponse>, t: Throwable) {
                 view.onApiFailure()
             }
         })
