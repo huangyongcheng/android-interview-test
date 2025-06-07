@@ -1,7 +1,6 @@
 package com.suongvong.interviewtest.ui.search
 
 import android.os.Bundle
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -14,7 +13,6 @@ import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.adapter.NewsAdapter
 import com.suongvong.interviewtest.binder.SearchBinderView
 import com.suongvong.interviewtest.constants.SEARCH_PARAMS
-import com.suongvong.interviewtest.extentions.showIf
 import com.suongvong.interviewtest.model.SearchParams
 import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.Article
@@ -57,7 +55,6 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
         viewModel.searchNews(context, searchParams)
     }
 
-    //  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun getArgumentIntent() {
         super.getArgumentIntent()
         searchParams = arguments?.let {
@@ -78,18 +75,8 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
             newsAdapter?.submitList(null)
             newsAdapter?.submitList(it)
             stopShimmerByViews(slArticle)
-           // tvNoData?.showIf(it.isEmpty())
-           // if(it.isEmpty()) {
-               // tvNoData?.postDelayed({
-                    tvNoData?.visibility = View.VISIBLE
-               // },200)
-
-           // }
         }
 
-       // tvNoData?.showIf(articles.isEmpty())
-     //   tvNoData?.visibility = View.VISIBLE
-      //  rvArticle?.visibility  =View.GONE
     }
 
     override fun onGetNewsEverythingFail(apiErrorResponse: ApiErrorResponse) {
@@ -102,8 +89,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
         TODO("Not yet implemented")
     }
 
-    override fun onItemClick(article: Article?) {
-
+    override fun onItemClick(article: Article) {
         val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(article)
         findNavController().navigate(action)
     }

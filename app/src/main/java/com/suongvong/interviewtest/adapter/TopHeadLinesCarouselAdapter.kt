@@ -1,6 +1,5 @@
 package com.suongvong.interviewtest.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +10,29 @@ import com.bumptech.glide.Glide
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.network.response.Article
 
-class TopHeadLinesCarouselAdapter(val context: Context?, private val items: List<Article>, val listener:TopHeadLinesCarouselLister) :
-    RecyclerView.Adapter<TopHeadLinesCarouselAdapter.CarouselViewHolder>() {
+class TopHeadLinesCarouselAdapter(
+    private val items: List<Article>,
+    private val listener: TopHeadLinesCarouselListener
+) : RecyclerView.Adapter<TopHeadLinesCarouselAdapter.CarouselViewHolder>() {
 
-    interface TopHeadLinesCarouselLister{
+    interface TopHeadLinesCarouselListener {
         fun onItemTopHeadlineClick(article: Article)
     }
+
     inner class CarouselViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
-        val imgThumbnail: ImageView = itemView.findViewById(R.id.imgThumbnail)
+        private val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
+        private val imgThumbnail: ImageView = itemView.findViewById(R.id.imgThumbnail)
+
+        fun bind(article: Article) {
+            tvTitle.text = article.title
+            Glide.with(itemView.context)
+                .load(article.urlToImage)
+                .into(imgThumbnail)
+
+            itemView.setOnClickListener {
+                listener.onItemTopHeadlineClick(article)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarouselViewHolder {
@@ -29,19 +42,7 @@ class TopHeadLinesCarouselAdapter(val context: Context?, private val items: List
     }
 
     override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
-        val article = items[position]
-        holder.tvTitle.text = article.title
-        if (context != null) {
-            Glide.with(context).load(article.urlToImage).into(holder.imgThumbnail)
-        }
-
-        holder.itemView.setOnClickListener {
-            listener.onItemTopHeadlineClick(article)
-        }
-
-
-
-
+        holder.bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size

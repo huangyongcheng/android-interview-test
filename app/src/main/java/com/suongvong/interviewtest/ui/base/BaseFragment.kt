@@ -1,36 +1,34 @@
 package com.suongvong.interviewtest.ui.base
 
-
 import android.os.Bundle
 import android.view.*
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.suongvong.interviewtest.utils.ShimmerHelper
 
 abstract class BaseFragment<V : BaseViewModel<*>> : Fragment() {
-    protected abstract fun getLayoutId(): Int
-    private lateinit var rootView: View
-    abstract fun setupData(savedInstanceState: Bundle?)
-    lateinit var viewModel: V
-    abstract fun setupViewModel(): V
-    open fun setupView() {}
-    open fun getArgumentIntent() {}
 
+    protected lateinit var viewModel: V
+    private lateinit var rootView: View
+
+    protected abstract fun getLayoutId(): Int
+    protected abstract fun setupViewModel(): V
+    protected abstract fun setupData(savedInstanceState: Bundle?)
+    protected open fun setupView() {}
+    protected open fun getArgumentIntent() {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getArgumentIntent()
         viewModel = setupViewModel()
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         rootView = inflater.inflate(getLayoutId(), container, false)
         setupView()
         return rootView
-    }
-
-    open fun findViewById(id: Int): View? {
-        return rootView.findViewById(id)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,33 +36,23 @@ abstract class BaseFragment<V : BaseViewModel<*>> : Fragment() {
         setupData(savedInstanceState)
     }
 
+    protected open fun findViewById(id: Int): View? = rootView.findViewById(id)
 
-
-    open fun startShimmerByViews(vararg views: View?) {
-
+    protected open fun startShimmerByViews(vararg views: View?) {
         activity?.runOnUiThread {
-            views.forEach { view ->
-                view?.let {
-                    it.visibility = View.VISIBLE
-                    ShimmerHelper.findAndStartShimmer(it)
-                }
-            }
+            views.forEach { it?.apply {
+                visibility = View.VISIBLE
+                ShimmerHelper.findAndStartShimmer(this)
+            }}
         }
     }
 
-    open fun stopShimmerByViews(vararg views: View?) {
-
+    protected open fun stopShimmerByViews(vararg views: View?) {
         activity?.runOnUiThread {
-            views.forEach { view ->
-                view?.let {
-                    it.visibility = View.GONE
-                    ShimmerHelper.findAndStopShimmer(it)
-                }
-            }
+            views.forEach { it?.apply {
+                visibility = View.GONE
+                ShimmerHelper.findAndStopShimmer(this)
+            }}
         }
     }
-
 }
-
-
-

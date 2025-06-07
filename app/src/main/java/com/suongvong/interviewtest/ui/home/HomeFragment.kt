@@ -28,8 +28,9 @@ import com.suongvong.interviewtest.utils.AutoSlideViewPagerUtil
 
 // cơ chế load more
 // save data từ database hiện thị offline
+// them refresh layout
 class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView.OnItemClickListener,
-    TopHeadLinesCarouselAdapter.TopHeadLinesCarouselLister {
+    TopHeadLinesCarouselAdapter.TopHeadLinesCarouselListener {
 
     private var rvArticle: RecyclerView? = null
     private var vpTopHead: ViewPager2? = null
@@ -110,7 +111,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
     private var topHeadLinesCarouselAdapter: TopHeadLinesCarouselAdapter? = null
 
     private fun setupViewPager() {
-        topHeadLinesCarouselAdapter = TopHeadLinesCarouselAdapter(context, items, this)
+        topHeadLinesCarouselAdapter = TopHeadLinesCarouselAdapter( items, this)
         vpTopHead?.addCarouselEffect(true)
         vpTopHead?.adapter = topHeadLinesCarouselAdapter
         autoSlideUtil = AutoSlideViewPagerUtil(vpTopHead)
@@ -163,13 +164,12 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderVie
 
     }
 
-    override fun onItemClick(article: Article?) {
-
+    override fun onItemTopHeadlineClick(article: Article) {
         val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(article)
         findNavController().navigate(action)
     }
 
-    override fun onItemTopHeadlineClick(article: Article) {
+    override fun onItemClick(article: Article) {
         val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(article)
         findNavController().navigate(action)
     }

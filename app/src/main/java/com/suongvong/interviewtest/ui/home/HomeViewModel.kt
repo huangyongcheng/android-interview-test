@@ -6,7 +6,6 @@ import com.suongvong.interviewtest.extentions.getLanguage
 import com.suongvong.interviewtest.network.RetrofitClient
 import com.suongvong.interviewtest.network.response.ApiErrorResponse
 import com.suongvong.interviewtest.network.response.NewsResponse
-import com.suongvong.interviewtest.network.response.NewsSourceResponse
 import com.suongvong.interviewtest.ui.base.BaseViewModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,28 +13,44 @@ import retrofit2.Response
 
 class HomeViewModel : BaseViewModel<HomeNavigator>() {
 
+    private fun <T> handleResponse(
+        response: Response<T>,
+        onSuccess: (T) -> Unit,
+        onFail: (ApiErrorResponse) -> Unit
+    ) {
+        if (response.isSuccessful) {
+            response.body()?.let {
+                onSuccess(it)
+            } ?: onFail(ApiErrorResponse("Empty response body"))
+        } else {
+            val errorJson = response.errorBody()?.string()
+            val errorResponse = try {
+                Gson().fromJson(errorJson, ApiErrorResponse::class.java)
+            } catch (e: Exception) {
+                ApiErrorResponse("Unknown error")
+            }
+            onFail(errorResponse)
+        }
+    }
+
     fun getNewsEverything(context: Context?) {
         val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getEverything(
-            language = context?.getLanguage()
-        )
+        val call = RetrofitClient.instance.getEverything(language = context?.getLanguage())
 
         call.enqueue(object : Callback<NewsResponse> {
-            override fun onResponse(
-                call: Call<NewsResponse>,
-                response: Response<NewsResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val articles = response.body()?.articles ?: emptyList()
-                    view.onGetNewsEverythingSuccessful(articles)
-                } else {
-                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
-                    view.onGetNewsEverythingFail(errorResponse)
-                }
+            override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
+                handleResponse(response,
+                    onSuccess = { newsResponse ->
+                        view.onGetNewsEverythingSuccessful(newsResponse.articles)
+                    },
+                    onFail = { errorResponse ->
+                        view.onGetNewsEverythingFail(errorResponse)
+                    }
+                )
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                view.onApiFailure()
+                getNavigator()?.onApiFailure()
             }
         })
     }
@@ -45,45 +60,19 @@ class HomeViewModel : BaseViewModel<HomeNavigator>() {
         val call = RetrofitClient.instance.getTopHeadlines()
 
         call.enqueue(object : Callback<NewsResponse> {
-            override fun onResponse(
-                call: Call<NewsResponse>,
-                response: Response<NewsResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val articles = response.body()?.articles ?: emptyList()
-                    view.onGetTopHeadlinesSuccessful(articles)
-                } else {
-                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
-                    view.onGetTopHeadlinesFail(errorResponse)
-                }
+            override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
+                handleResponse(response,
+                    onSuccess = { newsResponse ->
+                        view.onGetTopHeadlinesSuccessful(newsResponse.articles)
+                    },
+                    onFail = { errorResponse ->
+                        view.onGetTopHeadlinesFail(errorResponse)
+                    }
+                )
             }
 
             override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                view.onApiFailure()
-            }
-        })
-    }
-
-    fun getTopHeadlineSources() {
-        val view = getNavigator() ?: return
-        val call = RetrofitClient.instance.getTopHeadlineSources()
-
-        call.enqueue(object : Callback<NewsSourceResponse> {
-            override fun onResponse(
-                call: Call<NewsSourceResponse>,
-                response: Response<NewsSourceResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val newsSourceList = response.body()?.sources ?: emptyList()
-                  //  view.onGetTopHeadlineSourcesSuccessful(newsSourceList)
-                } else {
-                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ApiErrorResponse::class.java)
-                  //  view.onGetTopHeadlineSourcesFail(errorResponse)
-                }
-            }
-
-            override fun onFailure(call: Call<NewsSourceResponse>, t: Throwable) {
-                view.onApiFailure()
+                getNavigator()?.onApiFailure()
             }
         })
     }
