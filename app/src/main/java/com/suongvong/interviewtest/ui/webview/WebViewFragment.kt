@@ -1,13 +1,17 @@
 package com.suongvong.interviewtest.ui.webview
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.binder.NewsBinderView
+import com.suongvong.interviewtest.dialog.LoadingDialog
 import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 
@@ -18,6 +22,7 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
     private var webView: WebView? = null
 
     private var url: String? = null
+    private var loadingDialog: LoadingDialog? = null
     override fun getLayoutId(): Int = R.layout.fragment_webview
 
     override fun setupViewModel(): WebViewViewModel {
@@ -32,9 +37,38 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
     override fun setupView() {
         super.setupView()
         webView = findViewById(R.id.webView) as WebView
-        webView?.webViewClient = WebViewClient()
-        webView?.settings?.javaScriptEnabled = true
+        loadingDialog = LoadingDialog(context)
+        setupWebView()
 
+
+    }
+
+    private fun setupWebView() {
+        webView?.apply {
+            settings.javaScriptEnabled = true
+
+            webViewClient = object : WebViewClient() {
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                    super.onPageStarted(view, url, favicon)
+
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    loadingDialog?.dismiss()
+
+                }
+
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
+                    super.onReceivedError(view, request, error)
+                    loadingDialog?.dismiss()
+                }
+            }
+        }
 
     }
 
@@ -48,6 +82,7 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
     override fun setupData(savedInstanceState: Bundle?) {
         viewModel = setupViewModel()
         viewModel.setNavigator(this)
+        loadingDialog?.show()
         loadWebView()
 
     }
