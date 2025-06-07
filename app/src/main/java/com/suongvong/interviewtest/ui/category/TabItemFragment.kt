@@ -17,74 +17,70 @@ import com.suongvong.interviewtest.ui.base.BaseFragment
 import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
 import com.suongvong.interviewtest.utils.ArticleDataSource
 
-class TabItemFragment(var category: String) : BaseFragment<CategoryViewModel>(), CategoryNavigator, NewsBinderView.OnItemClickListener {
+class TabItemFragment(private val category: String) :
+    BaseFragment<CategoryViewModel>(),
+    CategoryNavigator,
+    NewsBinderView.OnItemClickListener {
 
-    private var rvArticle: RecyclerView? = null
-    private var slArticle: LinearLayout? = null
-    private var newsAdapter: NewsAdapter? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var shimmerLayout: LinearLayout
+    private lateinit var newsAdapter: NewsAdapter
 
     override fun getLayoutId(): Int = R.layout.fragment_tab_item
 
     override fun setupViewModel(): CategoryViewModel {
-        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+        return ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return CategoryViewModel() as T
             }
         })[CategoryViewModel::class.java]
-        return viewModel
     }
 
-
     override fun setupView() {
-        super.setupView()
-        rvArticle = findViewById(R.id.rvArticle) as RecyclerView
-        slArticle = findViewById(R.id.slArticle) as LinearLayout
-
+        recyclerView = findViewById(R.id.rvArticle) as RecyclerView
+        shimmerLayout = findViewById(R.id.slArticle) as LinearLayout
+        setupRecyclerView()
     }
 
     override fun setupData(savedInstanceState: Bundle?) {
-        viewModel = setupViewModel()
         viewModel.setNavigator(this)
-        setupRecyclerView()
-        startShimmerByViews(slArticle)
-        viewModel.getTopHeadlines(category = category)
+        startShimmerByViews(shimmerLayout)
+        viewModel.getTopHeadlines(category)
     }
-
 
     private fun setupRecyclerView() {
-        linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         newsAdapter = NewsAdapter()
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = newsAdapter
+        }
 
-        rvArticle?.layoutManager = linearLayoutManager
-        rvArticle?.adapter = newsAdapter
-        newsAdapter?.register(Article::class.java, NewsBinderView(this) as ItemViewBinder<Article, RecyclerView.ViewHolder>)
+        newsAdapter.register(
+            Article::class.java,
+            NewsBinderView(this) as ItemViewBinder<Article, RecyclerView.ViewHolder>
+        )
     }
 
-
     override fun onGetTopHeadlinesSuccessful(articles: List<Article>) {
-        ArticleDataSource.createDataSource(articles).observe(this) {
-            newsAdapter?.submitList(null)
-            newsAdapter?.submitList(it)
-            stopShimmerByViews(slArticle)
+        ArticleDataSource.createDataSource(articles).observe(viewLifecycleOwner) { list ->
+            newsAdapter.submitList(null)
+            newsAdapter.submitList(list)
+            stopShimmerByViews(shimmerLayout)
         }
     }
 
     override fun onGetTopHeadlinesFail(apiErrorResponse: ApiErrorResponse) {
         Toast.makeText(context, apiErrorResponse.message, Toast.LENGTH_LONG).show()
-        stopShimmerByViews(slArticle)
-
+        stopShimmerByViews(shimmerLayout)
     }
 
     override fun onApiFailure() {
-
+        stopShimmerByViews(shimmerLayout)
+        Toast.makeText(context, "Network error", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemClick(contact: Article?) {
-
-        val action = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(contact)
+    override fun onItemClick(article: Article) {
+        val action = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(article)
         findNavController().navigate(action)
     }
-
-
 }

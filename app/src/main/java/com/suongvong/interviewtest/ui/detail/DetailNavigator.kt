@@ -4,7 +4,4 @@ import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseView
 
 
-interface DetailNavigator : BaseView {
-    fun onGetTopHeadlinesSuccessful(articles: List<Article>)
-    fun onGetTopHeadlinesFail()
-}
+interface DetailNavigator

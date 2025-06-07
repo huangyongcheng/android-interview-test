@@ -6,7 +6,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SearchParams(
-
     val searchType: SearchType?,
     val keyword: String?,
     val fromDate: String?,

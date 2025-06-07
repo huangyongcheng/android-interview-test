@@ -19,29 +19,33 @@ class CategoryFragment : Fragment(), OnTabSelectedListener {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
-
+    // --- Lifecycle Methods ---
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.fragment_category, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViews(view)
+        setupTabs()
+    }
 
+    // --- Setup Methods ---
+    private fun setupViews(view: View) {
         viewPager = view.findViewById(R.id.viewPager)
         tabLayout = view.findViewById(R.id.tabLayout)
         viewPager.isUserInputEnabled = false
+    }
 
+    private fun setupTabs() {
         val tabTitles = resources.getStringArray(R.array.news_categories)
-        val fragmentList = mutableListOf<Fragment>()
-        tabTitles.forEach {
-            fragmentList.add(TabItemFragment(it))
-        }
+        val fragments = tabTitles.map { TabItemFragment(it) }
 
-
-        val adapter = CategoryTabAdapter(requireActivity(), fragmentList)
+        val adapter = CategoryTabAdapter(requireActivity(), fragments)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -49,18 +53,13 @@ class CategoryFragment : Fragment(), OnTabSelectedListener {
         }.attach()
 
         tabLayout.setOnTabSelected(this)
-        val categoryPosition = arguments?.getInt(CATEGORY_POSITION)?:0
-        viewPager.currentItem = categoryPosition
 
+        val defaultPosition = arguments?.getInt(CATEGORY_POSITION) ?: 0
+        viewPager.currentItem = defaultPosition
     }
 
+    // --- Tab Event ---
     override fun onTabSelected(position: Int) {
         viewPager.currentItem = position
     }
-
-
 }
-
-
-
-

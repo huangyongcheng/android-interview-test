@@ -11,8 +11,6 @@ object DialogFactory {
 
     fun openLanguageDialog(context: Context?, selectedLanguageItem: (LanguageItem) -> Unit) {
         context?.let {
-
-
             val languages = listOf(
                 LanguageItem("ar", "Arabic", R.drawable.flag_ar),
                 LanguageItem("de", "German", R.drawable.flag_de),
@@ -25,9 +23,8 @@ object DialogFactory {
                 LanguageItem("pt", "Portuguese", R.drawable.flag_pt),
                 LanguageItem("ru", "Russian", R.drawable.flag_ru),
                 LanguageItem("sv", "Swedish", R.drawable.flag_sv),
-                LanguageItem("zh", "Chinese", R.drawable.flag_zh),
-
-                )
+                LanguageItem("zh", "Chinese", R.drawable.flag_zh)
+            )
 
             LanguageDialog(context, languages) { languageItem ->
                 selectedLanguageItem.invoke(languageItem)
@@ -37,7 +34,6 @@ object DialogFactory {
 
     fun openSearchNewsDialog(context: Context?, onSearch: (SearchParams) -> Unit) {
         context?.let {
-
             SearchNewsDialog(context) { result ->
                 onSearch.invoke(result)
             }.show()

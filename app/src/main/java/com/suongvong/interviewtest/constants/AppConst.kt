@@ -4,6 +4,8 @@ package com.suongvong.interviewtest.constants
 const val API_KEY="d530a62a67ab41fabf7c71bff0adae7f"
 const val DEFAULT_LANGUAGE="en"
 const val DEFAULT_COUNTRY="us"
+const val DEFAULT_PAGE = 1
+const val DEFAULT_PAGE_SIZE = 20
 const val SEARCH_PARAMS = "search_params"
 const val CATEGORY_POSITION = "category_position"
 

@@ -8,21 +8,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.suongvong.interviewtest.R
-import com.suongvong.interviewtest.binder.NewsBinderView
 import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 
-
-class DetailFragment : BaseFragment<DetailViewModel>(), DetailNavigator, NewsBinderView.OnItemClickListener, View.OnClickListener {
-
+class DetailFragment : BaseFragment<DetailViewModel>(), DetailNavigator, View.OnClickListener {
 
     private var textTitle: TextView? = null
     private var textContent: TextView? = null
     private var textUrl: TextView? = null
-    private lateinit var imageView:ImageView
+    private lateinit var imageView: ImageView
 
     private var article: Article? = null
+
     override fun getLayoutId(): Int = R.layout.fragment_detail
 
     override fun setupViewModel(): DetailViewModel {
@@ -42,7 +41,6 @@ class DetailFragment : BaseFragment<DetailViewModel>(), DetailNavigator, NewsBin
         imageView = findViewById(R.id.imgThumbnail) as ImageView
 
         textUrl?.setOnClickListener(this)
-
     }
 
     override fun getArgumentIntent() {
@@ -56,42 +54,28 @@ class DetailFragment : BaseFragment<DetailViewModel>(), DetailNavigator, NewsBin
         viewModel = setupViewModel()
         viewModel.setNavigator(this)
         loadNewsContent()
-
     }
 
     private fun loadNewsContent() {
-        textTitle?.text = article?.title
-        textContent?.text = article?.content
-        textUrl?.text = article?.url
-        Glide.with(requireActivity()).load(article?.urlToImage).into(imageView)
-    }
+        article?.let {
+            textTitle?.text = it.title
+            textContent?.text = it.content
+            textUrl?.text = it.url
 
-
-    override fun onGetTopHeadlinesSuccessful(articles: List<Article>) {
-
-
-    }
-
-    override fun onGetTopHeadlinesFail() {
-
-    }
-
-    override fun onApiFailure() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onItemClick(contact: Article?) {
-        TODO("Not yet implemented")
+            Glide.with(this)
+                .load(it.urlToImage)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .error(R.drawable.image_error)
+                .into(imageView)
+        }
     }
 
     override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.textUrl -> {
-                val url = textUrl?.text.toString()
-                if (url.isNotBlank()) {
-                    val action = DetailFragmentDirections.actionDetailFragmentToWebviewFragment(url)
-                    findNavController().navigate(action)
-                }
+        if (v?.id == R.id.textUrl) {
+            val url = textUrl?.text?.toString()
+            if (!url.isNullOrBlank()) {
+                val action = DetailFragmentDirections.actionDetailFragmentToWebviewFragment(url)
+                findNavController().navigate(action)
             }
         }
     }

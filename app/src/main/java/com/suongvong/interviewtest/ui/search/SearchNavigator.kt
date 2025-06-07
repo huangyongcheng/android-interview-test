@@ -6,8 +6,6 @@ import com.suongvong.interviewtest.ui.base.BaseView
 
 
 interface SearchNavigator : BaseView {
-
-
     fun onGetNewsEverythingSuccessful(articles: List<Article>)
     fun onGetNewsEverythingFail(apiErrorResponse: ApiErrorResponse)
 }

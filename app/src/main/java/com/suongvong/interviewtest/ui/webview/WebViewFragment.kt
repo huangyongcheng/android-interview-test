@@ -2,7 +2,6 @@ package com.suongvong.interviewtest.ui.webview
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -10,19 +9,15 @@ import android.webkit.WebViewClient
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.suongvong.interviewtest.R
-import com.suongvong.interviewtest.binder.NewsBinderView
 import com.suongvong.interviewtest.dialog.LoadingDialog
-import com.suongvong.interviewtest.network.response.Article
 import com.suongvong.interviewtest.ui.base.BaseFragment
 
-
-class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, NewsBinderView.OnItemClickListener, View.OnClickListener {
-
+class WebViewFragment : BaseFragment<WebViewViewModel>() {
 
     private var webView: WebView? = null
-
     private var url: String? = null
     private var loadingDialog: LoadingDialog? = null
+
     override fun getLayoutId(): Int = R.layout.fragment_webview
 
     override fun setupViewModel(): WebViewViewModel {
@@ -39,8 +34,6 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
         webView = findViewById(R.id.webView) as WebView
         loadingDialog = LoadingDialog(context)
         setupWebView()
-
-
     }
 
     private fun setupWebView() {
@@ -50,13 +43,11 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
             webViewClient = object : WebViewClient() {
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
-
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     loadingDialog?.dismiss()
-
                 }
 
                 override fun onReceivedError(
@@ -66,10 +57,10 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
                 ) {
                     super.onReceivedError(view, request, error)
                     loadingDialog?.dismiss()
+                    // Optional: Show error message here if needed
                 }
             }
         }
-
     }
 
     override fun getArgumentIntent() {
@@ -80,43 +71,21 @@ class WebViewFragment : BaseFragment<WebViewViewModel>(), WebViewNavigator, News
     }
 
     override fun setupData(savedInstanceState: Bundle?) {
-        viewModel = setupViewModel()
-        viewModel.setNavigator(this)
         loadingDialog?.show()
         loadWebView()
-
     }
 
     private fun loadWebView() {
-
         url?.let { webView?.loadUrl(it) }
     }
 
-
-    override fun onGetTopHeadlinesSuccessful(articles: List<Article>) {
-
-
-    }
-
-    override fun onGetTopHeadlinesFail() {
-
-    }
-
-    override fun onApiFailure() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onItemClick(contact: Article?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.textUrl -> {
-
-            }
+    override fun onDestroyView() {
+        webView?.apply {
+            stopLoading()
+            destroy()
         }
+        webView = null
+        super.onDestroyView()
     }
-
 
 }

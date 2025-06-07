@@ -3,18 +3,22 @@ package com.suongvong.interviewtest.ui.base
 import androidx.lifecycle.ViewModel
 import java.lang.ref.WeakReference
 
-
 abstract class BaseViewModel<N> : ViewModel() {
-    private var navigator: WeakReference<N>? = null
 
-
-    fun getNavigator(): N? {
-        return navigator?.get()
-    }
-
+    private var navigatorRef: WeakReference<N>? = null
     fun setNavigator(navigator: N) {
-        this.navigator = WeakReference(navigator)
+        this.navigatorRef = WeakReference(navigator)
     }
 
+    fun getNavigator(): N? = navigatorRef?.get()
 
+
+    open fun getListener(): OnDataSourceError = object : OnDataSourceError {
+        override fun onInitialError() {}
+        override fun onAfterError() {}
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+    }
 }

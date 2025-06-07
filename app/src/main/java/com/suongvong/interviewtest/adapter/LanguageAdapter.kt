@@ -14,22 +14,27 @@ class LanguageAdapter(
     private val onClick: (LanguageItem) -> Unit
 ) : RecyclerView.Adapter<LanguageAdapter.LangViewHolder>() {
 
-    inner class LangViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivFlag: ImageView = itemView.findViewById(R.id.ivFlag)
-        val tvName: TextView = itemView.findViewById(R.id.tvLanguageName)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LangViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_language, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_language, parent, false)
         return LangViewHolder(view)
     }
 
-    override fun getItemCount() = languages.size
-
     override fun onBindViewHolder(holder: LangViewHolder, position: Int) {
-        val lang = languages[position]
-        holder.ivFlag.setImageResource(lang.flagResId)
-        holder.tvName.text = lang.name
-        holder.itemView.setOnClickListener { onClick(lang) }
+        val language = languages[position]
+        holder.bind(language)
+    }
+
+    override fun getItemCount(): Int = languages.size
+
+    inner class LangViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val ivFlag: ImageView = itemView.findViewById(R.id.ivFlag)
+        private val tvName: TextView = itemView.findViewById(R.id.tvLanguageName)
+
+        fun bind(languageItem: LanguageItem) {
+            ivFlag.setImageResource(languageItem.flagResId)
+            tvName.text = languageItem.name
+            itemView.setOnClickListener { onClick(languageItem) }
+        }
     }
 }

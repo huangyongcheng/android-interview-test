@@ -40,8 +40,6 @@ class SearchNewsDialog(
     private lateinit var sortOptions: List<String>
     private lateinit var availableCategories: List<String>
     private lateinit var searchIns: List<String>
-
-
     private lateinit var etKeyword: EditText
     private lateinit var btnFromDate: TextView
     private lateinit var btnToDate: TextView
@@ -121,8 +119,6 @@ class SearchNewsDialog(
             }
             chipGroupSearchIn.addView(chip)
         }
-
-        // Setup sort options
 
         spinnerSort.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, sortOptions).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
