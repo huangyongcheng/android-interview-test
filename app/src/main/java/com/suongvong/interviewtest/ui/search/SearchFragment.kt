@@ -1,6 +1,8 @@
 package com.suongvong.interviewtest.ui.search
 
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -25,6 +27,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
     private var rvArticle: RecyclerView? = null
     private var newsAdapter: NewsAdapter? = null
     private var searchParams: SearchParams? = null
+    private var slArticle: LinearLayout? = null
     private var tvNoData: TextView? = null
 
     override fun getLayoutId(): Int = R.layout.fragment_search
@@ -43,13 +46,14 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
         super.setupView()
         rvArticle = findViewById(R.id.rvArticle) as RecyclerView
         tvNoData = findViewById(R.id.tvNoData) as TextView
-
+        slArticle = findViewById(R.id.slArticle) as LinearLayout
     }
 
     override fun setupData(savedInstanceState: Bundle?) {
         viewModel = setupViewModel()
         viewModel.setNavigator(this)
         setupRecyclerView()
+        startShimmerByViews(slArticle)
         viewModel.searchNews(context, searchParams)
     }
 
@@ -63,9 +67,7 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
 
 
     private fun setupRecyclerView() {
-        //     linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         newsAdapter = NewsAdapter()
-
         rvArticle?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rvArticle?.adapter = newsAdapter
         newsAdapter?.register(Article::class.java, SearchBinderView(this) as ItemViewBinder<Article, RecyclerView.ViewHolder>)
@@ -75,13 +77,25 @@ class SearchFragment : BaseFragment<SearchViewModel>(), SearchNavigator, SearchB
         ArticleDataSource.createDataSource(articles).observe(this) {
             newsAdapter?.submitList(null)
             newsAdapter?.submitList(it)
+            stopShimmerByViews(slArticle)
+           // tvNoData?.showIf(it.isEmpty())
+           // if(it.isEmpty()) {
+               // tvNoData?.postDelayed({
+                    tvNoData?.visibility = View.VISIBLE
+               // },200)
+
+           // }
         }
 
-        tvNoData?.showIf(articles.isNotEmpty())
+       // tvNoData?.showIf(articles.isEmpty())
+     //   tvNoData?.visibility = View.VISIBLE
+      //  rvArticle?.visibility  =View.GONE
     }
 
     override fun onGetNewsEverythingFail(apiErrorResponse: ApiErrorResponse) {
         Toast.makeText(context, apiErrorResponse.message, Toast.LENGTH_LONG).show()
+        stopShimmerByViews(slArticle)
+
     }
 
     override fun onApiFailure() {

@@ -14,34 +14,35 @@
         android:padding="8dp">
 
         <!-- Thumbnail -->
-        <ImageView
+        <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/imageThumbnail"
-            android:src="@mipmap/ic_launcher"
+            android:background="@color/shimmer_background_color"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_alpha="1.0"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:layout_height="150dp" />
+
 
         <!-- Title -->
-        <TextView
+        <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/textTitle"
+            android:layout_marginTop="10dp"
+            android:background="@color/shimmer_background_color"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_alpha="1.0"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="Sample Title"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:layout_height="20dp" />
 
         <!-- Description -->
-        <TextView
+        <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/textDescription"
-            android:ellipsize="end"
-            android:maxLines="2"
+            android:layout_marginTop="10dp"
+            android:background="@color/shimmer_background_color"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_alpha="1.0"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sample description goes here."
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+            android:layout_marginEnd="50dp"
+            android:layout_height="15dp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

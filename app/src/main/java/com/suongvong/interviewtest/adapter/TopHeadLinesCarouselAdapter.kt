@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import com.suongvong.interviewtest.R
 import com.suongvong.interviewtest.network.response.Article
 
-class CarouselAdapter(val context:Context?, private val items: List<Article>) :
-    RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>() {
+class TopHeadLinesCarouselAdapter(val context:Context?, private val items: List<Article>) :
+    RecyclerView.Adapter<TopHeadLinesCarouselAdapter.CarouselViewHolder>() {
 
     inner class CarouselViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(R.id.textView)

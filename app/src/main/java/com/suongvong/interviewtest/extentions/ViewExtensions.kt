@@ -42,5 +42,8 @@ fun TabLayout.setOnTabSelected(listener: OnTabSelectedListener) {
 }
 
 fun View.showIf(condition: Boolean) {
-    visibility = if (condition) View.VISIBLE else View.GONE
+    this.post {
+        visibility = if (condition) View.VISIBLE else View.GONE
+    }
+
 }
