@@ -11,7 +11,9 @@ import com.suongvong.interviewtest.ui.base.OnDataSourceError
 import io.reactivex.Observable
 import java.util.concurrent.Executor
 
-
+/**
+ * this class I implement for paging, but seem it doesn't work
+ */
 class NewsRepository(val context: Context, private val serverAPI: NewsApiService, private val retryExecutor: Executor) : INewsRepository {
     override fun getNews(error: OnDataSourceError): Observable<Listing<Article>> {
         val sourceFactory = NewsDataSourceFactory(context, serverAPI, retryExecutor, error)

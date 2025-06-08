@@ -26,9 +26,6 @@ import com.suongvong.interviewtest.ui.base.adapter.ItemViewBinder
 import com.suongvong.interviewtest.utils.ArticleDataSource
 import com.suongvong.interviewtest.utils.AutoSlideViewPagerUtil
 
-// cơ chế load more
-// save data từ database hiện thị offline
-// them refresh layout
 class HomeFragment : BaseFragment<HomeViewModel>(), HomeNavigator, NewsBinderView.OnItemClickListener,
     TopHeadLinesCarouselAdapter.TopHeadLinesCarouselListener {
 
